@@ -1,59 +1,104 @@
-# VitrineAfiliados
+# 🛍️ Vitrine de Afiliados
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.1.
+![Angular](https://img.shields.io/badge/Angular-20-DD0031?style=for-the-badge&logo=angular)
+![Firebase](https://img.shields.io/badge/Firebase-Realtime_DB-FFCA28?style=for-the-badge&logo=firebase)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?style=for-the-badge&logo=typescript)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-## Development server
+Uma aplicação web de alta performance desenvolvida para gerenciar e exibir links de afiliados de forma elegante e organizada. O projeto foca em **User Experience (UX)** e **Integridade de Dados**, utilizando o ecossistema Angular 20 e Firebase.
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
+## 🚀 Funcionalidades
+
+### 📱 Vitrine do Usuário
+- **Exposição Inteligente**: Visualização limpa e moderna dos produtos.
+- **Filtro de Expiração**: Produtos com data de validade vencida são ocultados automaticamente da vitrine.
+- **Redirecionamento Seguro**: Clique direto para a loja do afiliado com rastreamento de métricas.
+
+### ⚙️ Painel Administrativo
+- **Gestão de Produtos**: Cadastro completo com nome, imagem, link, loja e data de expiração.
+- **Drag & Drop**: Reordenação visual dos produtos na vitrine utilizando `Angular CDK`.
+- **Gerenciamento de Lojas**: Sistema dinâmico para cadastrar e remover lojas parceiras (Shopee, Amazon, Magalu, etc).
+- **Limpeza Global**: Opção para resetar a base de dados de produtos.
+
+### 📊 Analytics & Relatórios
+- **Ranking de Performance**: Visualização em tempo real de quais produtos possuem mais cliques.
+- **Contagem Atômica**: Incremento de cliques via transações Firebase para evitar perda de dados.
+
+---
+
+## 🎨 Design System
+
+O projeto utiliza uma paleta de cores personalizada para transmitir modernidade e suavidade:
+- **Lilás Suave** (`#f3f0ff`): Cor de fundo principal.
+- **Branco Puro** (`#ffffff`): Cards e containers.
+- **Verde Sucesso** (`#28a745`): Botões de ação positiva.
+- **Laranja/Vermelho** (`#ff4700`): Alertas e exclusões.
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+- **Framework:** Angular 20
+- **Banco de Dados:** Firebase Realtime Database
+- **Estilização:** SCSS (Sass)
+- **Componentes:** Angular CDK (Drag and Drop)
+- **Gerenciamento de Estado:** RxJS (Observables para dados em tempo real)
+
+---
+
+## 📥 Instalação e Execução
+
+1. **Clone o repositório:**
+   ```bash
+   git clone https://github.com/seu-usuario/vitrine-afiliados.git
+   cd vitrine-afiliados
+   ```
+
+2. **Instale as dependências:**
+   ```bash
+   npm install
+   ```
+
+3. **Configure o Firebase:**
+   Certifique-se de que o arquivo `src/environments/environment.ts` contenha suas credenciais:
+   ```typescript
+   export const environment = {
+     firebase: {
+       apiKey: "...",
+       databaseURL: "...",
+       // ...
+     }
+   };
+   ```
+
+4. **Inicie o servidor de desenvolvimento:**
+   ```bash
+   ng serve
+   ```
+   Acesse em: `http://localhost:4200`
+
+---
+
+## 📂 Estrutura de Pastas
+
+```text
+src/app/
+ ├── models/            # Interfaces e tipos de dados
+ ├── services/          # Lógica de comunicação com Firebase
+ ├── admin/             # Componentes de gerenciamento de produtos
+ ├── lojas/             # Componentes de gestão de lojas
+ ├── analytics/         # Relatórios de performance
+ └── vitrine/           # Interface pública para clientes
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## 📝 Licença
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
 
-```bash
-ng generate component component-name
-```
+---
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+<p align="center">Desenvolvido com ❤️ para impulsionar vendas de afiliados.</p>
