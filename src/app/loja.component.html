@@ -1,0 +1,15 @@
+<div class="loja-container">
+  <section class="lojas-section">
+    <h2>Gerenciar Lojas</h2>
+    <div class="loja-input-group">
+      <input [(ngModel)]="novaLojaNome" placeholder="Nome da nova loja">
+      <button (click)="adicionarLoja()">Adicionar Loja</button>
+    </div>
+    <div class="lojas-chips">
+      <span *ngFor="let loja of lojas$ | async" class="chip">
+        {{ loja.nome }}
+        <button (click)="removerLoja(loja.id)">&times;</button>
+      </span>
+    </div>
+  </section>
+</div>

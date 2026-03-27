@@ -1,0 +1,25 @@
+<div class="analytics-container">
+  <h2>Relatório de Cliques</h2>
+  <p>Produtos ordenados pelo melhor desempenho</p>
+
+  <div class="ranking-list">
+    <div class="ranking-header">
+      <span>Produto</span>
+      <span>Loja</span>
+      <span>Cliques</span>
+    </div>
+    
+    <div *ngFor="let p of produtosRanking$ | async; let i = index" class="ranking-item">
+      <div class="prod-info">
+        <span class="rank-pos">#{{ i + 1 }}</span>
+        <span class="nome">{{ p.nome }}</span>
+      </div>
+      <div class="loja-badge" [attr.data-loja]="p.loja">
+        {{ p.loja | titlecase }}
+      </div>
+      <div class="cliques-count">
+        <strong>{{ p.cliques || 0 }}</strong>
+      </div>
+    </div>
+  </div>
+</div>

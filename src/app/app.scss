@@ -1,0 +1,37 @@
+:root {
+  --lilas-suave: #f3f0ff;
+  --branco: #ffffff;
+  --amarelo-vibrante: #ffd700;
+  --texto-escuro: #333;
+  --borda-radius: 12px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--lilas-suave);
+  color: var(--texto-escuro);
+}
+
+* { box-sizing: border-box; }
+
+.main-nav {
+  background-color: var(--branco);
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  margin-bottom: 10px;
+
+  a {
+    text-decoration: none;
+    color: var(--texto-escuro);
+    font-weight: 500;
+    &.active {
+      color: #6a5acd; // Lilás mais forte para o estado ativo
+      border-bottom: 2px solid #6a5acd;
+    }
+  }
+}

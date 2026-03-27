@@ -1,0 +1,14 @@
+<div class="vitrine-container">
+  <div class="grid-produtos">
+    <div *ngFor="let p of produtos$ | async" class="card">
+      <div class="img-container">
+        <img [src]="p.link_imagem" [alt]="p.nome">
+        <span *ngIf="p.cliques > 10" class="foguinho">🔥 Alta Procura</span>
+      </div>
+      <div class="info">
+        <h3>{{p.nome}}</h3>
+        <button (click)="irParaOferta(p)" class="btn-cta">Ver Oferta</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,49 @@
+.analytics-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  min-height: 100vh;
+}
+
+.ranking-list {
+  margin-top: 20px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ranking-header, .ranking-item {
+  display: grid;
+  grid-template-columns: 1fr 100px 80px;
+  padding: 15px;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+}
+
+.ranking-header {
+  background: var(--lilas-suave);
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.prod-info {
+  display: flex;
+  gap: 10px;
+  .rank-pos { color: #888; font-weight: bold; min-width: 30px; }
+  .nome { font-weight: 500; }
+}
+
+.loja-badge {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-align: center;
+  width: fit-content;
+  background: #f0f0f0;
+  
+  &[data-loja="shopee"] { background: #ffeee5; color: #ff4700; }
+  &[data-loja="amazon"] { background: #e7f3f8; color: #00a8e1; }
+}
+
+.cliques-count { text-align: right; }

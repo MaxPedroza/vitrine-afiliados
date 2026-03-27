@@ -1,0 +1,39 @@
+<div class="admin-container">
+  <div class="header-admin">
+    <h2>Gerenciar Produtos</h2>
+    <button class="btn-clear-all" (click)="limparTudo()" *ngIf="produtos.length > 0">Limpar Tudo</button>
+  </div>
+  
+  <form (submit)="adicionar()" class="cadastro-form">
+    <input [(ngModel)]="novoProduto.nome" name="nome" placeholder="Nome do Produto" required>
+    <input [(ngModel)]="novoProduto.link_imagem" name="img" placeholder="URL da Imagem">
+    <input [(ngModel)]="novoProduto.link_compra" name="link" placeholder="Link de Afiliado">
+    <div class="row">
+      <select [(ngModel)]="novoProduto.loja" name="loja">
+        <option value="" disabled selected>Selecione a Loja</option>
+        <option *ngFor="let loja of lojas$ | async" [value]="loja.nome">{{ loja.nome }}</option>
+      </select>
+      <input type="date" [(ngModel)]="novoProduto.data_expiracao" name="exp">
+    </div>
+    <button type="submit" class="btn-add">Cadastrar Produto</button>
+  </form>
+
+  <div *ngIf="produtos.length === 0" class="empty-state">
+    Nenhum produto cadastrado ou carregando...
+  </div>
+
+  <div cdkDropList (cdkDropListDropped)="drop($event)" class="drag-list">
+    <div *ngFor="let item of produtos" cdkDrag class="drag-item">
+      <div class="drag-handle" cdkDragHandle>
+        <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M10 9h4V5h3l-5-5-5 5h3v4zm0 6h4v4h3l-5 5-5-5h3v-4z"></path>
+        </svg>
+      </div>
+      <span class="nome">{{item.nome}}</span>
+      <span class="meta">{{item.cliques}} cliques</span>
+      <button class="btn-delete" (click)="remover(item.id)" title="Excluir produto">
+        &times;
+      </button>
+    </div>
+  </div>
+</div>
