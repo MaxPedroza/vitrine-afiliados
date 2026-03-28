@@ -4,7 +4,7 @@ export interface Loja {
 }
 
 export interface Produto {
-  id: string;
+  id?: string;
   nome: string;
   link_compra: string;
   link_imagem: string;
@@ -12,4 +12,5 @@ export interface Produto {
   cliques: number;
   posicao: number;
   data_expiracao: string;
+  ativo?: boolean;
 }

@@ -1,25 +1,40 @@
 <div class="analytics-container">
-  <h2>Relatório de Cliques</h2>
-  <p>Produtos ordenados pelo melhor desempenho</p>
+  <div class="header-analytics">
+    <h1 class="title-purple">Ranking de Desempenho</h1>
+    <p class="subtitle">Produtos que mais geraram cliques na sua vitrine</p>
+  </div>
 
-  <div class="ranking-list">
+  <div class="ranking-list" *ngIf="produtosRanking$ | async as produtos">
     <div class="ranking-header">
       <span>Produto</span>
       <span>Loja</span>
-      <span>Cliques</span>
+      <span class="txt-right">Cliques</span>
     </div>
     
-    <div *ngFor="let p of produtosRanking$ | async; let i = index" class="ranking-item">
+    <div *ngFor="let p of produtos; let i = index" class="ranking-item">
       <div class="prod-info">
         <span class="rank-pos">#{{ i + 1 }}</span>
-        <span class="nome">{{ p.nome }}</span>
+        <div class="nome-wrapper">
+          <span class="nome">{{ p.nome }}</span>
+          <div class="performance-bar-container">
+            <div class="performance-bar" [style.width.%]="p.cliques"></div>
+          </div>
+        </div>
       </div>
-      <div class="loja-badge" [attr.data-loja]="p.loja">
-        {{ p.loja | titlecase }}
+
+      <div class="loja-column">
+        <span class="loja-badge" [attr.data-loja]="p.loja.toLowerCase()">
+          {{ p.loja | titlecase }}
+        </span>
       </div>
+
       <div class="cliques-count">
         <strong>{{ p.cliques || 0 }}</strong>
       </div>
+    </div>
+
+    <div *ngIf="produtos.length === 0" class="empty-state">
+      Ainda não há dados de cliques registrados.
     </div>
   </div>
 </div>

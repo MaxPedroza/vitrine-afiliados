@@ -25,14 +25,16 @@ import {
   ɵɵdefineInjector,
   ɵɵdefineNgModule,
   ɵɵinject
-} from "./chunk-ZGHF5XCW.js";
+} from "./chunk-X7ZBLB4S.js";
+import {
+  queueScheduler
+} from "./chunk-N2G3NVBP.js";
 import {
   Observable,
   asyncScheduler,
   observeOn,
-  queueScheduler,
   subscribeOn
-} from "./chunk-U5BGXTXY.js";
+} from "./chunk-ZNVZ47EP.js";
 
 // node_modules/@angular/fire/node_modules/firebase/app/dist/esm/index.esm.js
 var name = "firebase";
@@ -456,4 +458,4 @@ firebase/compat/app/dist/esm/index.esm.js:
    * License: MIT
    *)
 */
-//# sourceMappingURL=chunk-BAZ5KMGP.js.map
+//# sourceMappingURL=chunk-6ZUZ743O.js.map

@@ -1,13 +1,24 @@
 <div class="vitrine-container">
-  <div class="grid-produtos">
-    <div *ngFor="let p of produtos$ | async" class="card">
-      <div class="img-container">
-        <img [src]="p.link_imagem" [alt]="p.nome">
-        <span *ngIf="p.cliques > 10" class="foguinho">🔥 Alta Procura</span>
+  <div class="header-with-icon">
+    <span class="material-icons">local_mall</span>
+    <h1 class="store-title">Vitrine</h1>
+  </div>
+
+  <div class="products-grid">
+    <div class="product-card" *ngFor="let p of produtos$ | async">
+      <div class="image-wrapper">
+        <img [src]="p.link_imagem || 'assets/placeholder.png'" [alt]="p.nome">
+        <div class="badge-hot" *ngIf="(p.cliques || 0) > 10">🔥</div>
       </div>
-      <div class="info">
-        <h3>{{p.nome}}</h3>
-        <button (click)="irParaOferta(p)" class="btn-cta">Ver Oferta</button>
+
+      <div class="card-content">
+        <h3 class="product-name">{{ p.nome }}</h3>
+        <p class="meta-info">{{ p.loja | titlecase }}</p>
+        
+        <button class="btn-buy" (click)="irParaOferta(p)">
+          <span class="material-icons">shopping_cart</span>
+          Ver na {{ p.loja | titlecase }}
+        </button>
       </div>
     </div>
   </div>

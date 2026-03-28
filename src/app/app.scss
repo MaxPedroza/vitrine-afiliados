@@ -1,37 +1,196 @@
+/* Importação da biblioteca de ícones para que as tags .material-icons funcionem */
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
 :root {
-  --lilas-suave: #f3f0ff;
-  --branco: #ffffff;
-  --amarelo-vibrante: #ffd700;
-  --texto-escuro: #333;
-  --borda-radius: 12px;
+  --base-lilas: #E6E0F8;      // Light Lilac
+  --roxo-vibrante: #9C27B0;  // Vibrant Purple
+  --fundo-conteudo: #FFFFFF; // Content Background
+  --texto-principal: #333333; // Main Text
+  --texto-secundario: #666666; // Secondary Text
+  --amarelo-ouro: #FFD700;    // Gold Button
+  --borda-radius: 12px;      // Smooth corners
+  --azul-lavanda: #967BB6;   // Lavender Blue
+  --fundo-app: #E6E0F8;      // App Background (alias for base-lilas)
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background-color: var(--lilas-suave);
-  color: var(--texto-escuro);
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--base-lilas);
+  color: var(--texto-principal);
+  -webkit-font-smoothing: antialiased;
 }
 
-* { box-sizing: border-box; }
+* { 
+  box-sizing: border-box; 
+}
+
+// Estilo base para todos os botões
+button {
+  transition: all 0.2s ease;
+}
 
 .main-nav {
-  background-color: var(--branco);
-  padding: 1rem;
+  background-color: #dcd6f7; // Tom de lavanda bem clarinho para a base do menu
+  padding-top: 15px;
   display: flex;
   justify-content: center;
-  gap: 20px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  margin-bottom: 10px;
+  border-bottom: 2px solid #967BB6; // Linha de conexão na cor Lavanda
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  .tabs-wrapper {
+    display: flex;
+    gap: 8px;
+    max-width: 800px;
+    width: 100%;
+    justify-content: center;
+  }
 
   a {
     text-decoration: none;
-    color: var(--texto-escuro);
+    color: #666; // Cor das abas inativas
     font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    font-size: 14px;
+    border-radius: 12px 12px 0 0; // Formato de aba/pasta
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    border-bottom: none;
+
+    .material-icons { 
+      font-size: 20px; 
+      transition: color 0.3s;
+    }
+
+    // ABA SELECIONADA (Azul Lavanda)
     &.active {
-      color: #6a5acd; // Lilás mais forte para o estado ativo
-      border-bottom: 2px solid #6a5acd;
+      background-color: #967BB6; // Fundo Azul Lavanda
+      color: #ffffff !important; // Texto branco para contrastar com o lavanda
+      border: 1px solid #967BB6;
+      border-bottom: 2px solid #967BB6;
+      margin-bottom: -2px; // Funde a aba com a linha de baixo
+      box-shadow: 0 -4px 12px rgba(150, 123, 182, 0.2);
+      font-weight: bold;
+
+      .material-icons { 
+        color: #ffffff; 
+      }
+    }
+
+    // Efeito ao passar o mouse nas abas inativas
+    &:hover:not(.active) {
+      background-color: rgba(150, 123, 182, 0.1);
+      color: #967BB6;
+    }
+  }
+}
+
+.page-content {
+  margin-top: 0; // Garante que o conteúdo encoste nas abas
+}
+
+.page-content {
+  // Isso garante que o conteúdo suba e encoste no menu de abas
+  margin-top: 0;
+}
+
+// Estilos globais para cards (Dashboard e Admin)
+.card-dashboard {
+  background: var(--fundo-conteudo);
+  border-radius: var(--borda-radius);
+  padding: 24px;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(156, 39, 176, 0.15);
+  }
+
+  .material-icons {
+    font-size: 48px;
+    color: var(--roxo-vibrante);
+  }
+
+  h3 {
+    color: var(--roxo-vibrante);
+    margin: 0;
+    font-weight: bold;
+  }
+}
+
+/* Ajuste para evitar que títulos longos quebrem o layout no Mobile */
+.product-card-admin {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  width: 100%;
+
+  .product-info {
+    flex: 1;
+    min-width: 0; /* IMPORTANTE: Permite que o container encolha para o texto truncar */
+    
+    h4, span {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis; /* Adiciona o "..." */
+      margin: 0;
+    }
+  }
+
+  .product-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0; /* Impede que os botões de editar/excluir sumam da tela */
+  }
+}
+
+/* Estilização do Formulário de Cadastro/Edição */
+.cadastro-form {
+  .form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+    
+    button {
+      flex: 1;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      .material-icons { font-size: 20px; }
+    }
+
+    .btn-add {
+      background-color: var(--azul-lavanda);
+      color: white;
+      flex: 2; // Dá mais destaque ao botão de ação principal
+      &:hover { background-color: var(--roxo-vibrante); transform: translateY(-2px); }
     }
   }
 }

@@ -1,15 +1,37 @@
 <div class="loja-container">
-  <section class="lojas-section">
-    <h2>Gerenciar Lojas</h2>
-    <div class="loja-input-group">
-      <input [(ngModel)]="novaLojaNome" placeholder="Nome da nova loja">
-      <button (click)="adicionarLoja()">Adicionar Loja</button>
+  <div class="header-loja">
+    <h1 class="title-purple">Gerenciar Lojas</h1>
+    <p class="subtitle">Cadastre as plataformas (ex: Shopee, Amazon) para vincular aos seus produtos.</p>
+  </div>
+
+  <form (submit)="adicionarLoja()" class="cadastro-form">
+    <input [(ngModel)]="novaLojaNome" name="nomeLoja" placeholder="Nome da nova loja" required (keyup.enter)="adicionarLoja()">
+    <button type="submit" class="btn-add">
+      <span class="material-icons">add_circle</span>
+      Cadastrar Loja
+    </button>
+  </form>
+
+  <div class="lojas-list-container" *ngIf="lojas$ | async as lojas">
+    <div class="list-header">
+      <span>Plataforma</span>
+      <span class="txt-right">Ações</span>
     </div>
-    <div class="lojas-chips">
-      <span *ngFor="let loja of lojas$ | async" class="chip">
-        {{ loja.nome }}
-        <button (click)="removerLoja(loja.id)">&times;</button>
-      </span>
+    
+    <div *ngFor="let loja of lojas" class="list-item">
+      <div class="loja-info">
+        <span class="material-icons">storefront</span>
+        <span class="nome">{{ loja.nome }}</span>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn-icon red" (click)="removerLoja(loja.id)" title="Remover">
+          <span class="material-icons">delete</span>
+        </button>
+      </div>
+
+    <div *ngIf="lojas.length === 0" class="empty-state">
+      Nenhuma loja cadastrada ainda.
     </div>
-  </section>
+  </div>
 </div>

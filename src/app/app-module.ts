@@ -17,13 +17,17 @@ import { VitrineComponent } from './vitrine.component';
 import { AnalyticsComponent } from './analytics.component';
 import { LojaComponent } from './loja.component';
 
+// Novo componente de Popups
+import { NotificationComponent } from './notification.component';
+
 @NgModule({
   declarations: [
     App,
     AdminComponent,
     VitrineComponent,
     AnalyticsComponent,
-    LojaComponent
+    LojaComponent,
+    NotificationComponent // <--- Adicionado aqui
   ],
   imports: [
     BrowserModule,
@@ -31,7 +35,6 @@ import { LojaComponent } from './loja.component';
     BrowserAnimationsModule,
     FormsModule,
     DragDropModule,
-    // Inicialização do Firebase
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule
   ],

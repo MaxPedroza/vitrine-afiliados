@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ProductService } from './services/product.service';
 import { Produto } from './models/produto.model';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-vitrine',
@@ -9,24 +9,30 @@ import { Observable, map } from 'rxjs';
   styleUrls: ['./vitrine.component.scss'],
   standalone: false
 })
-export class VitrineComponent {
+export class VitrineComponent implements OnInit {
   produtos$: Observable<Produto[]>;
 
   constructor(private productService: ProductService) {
-    const hoje = new Date().toISOString().split('T')[0];
-    
-    this.produtos$ = this.productService.getProdutos().pipe(
-      map(produtos => produtos.filter(p => {
-        // Se não houver data, mostra. Se houver, limpa espaços e compara.
-        return !p.data_expiracao || p.data_expiracao.trim() === '' || p.data_expiracao >= hoje;
-      }))
-    );
+    // Busca os produtos já ordenados pela 'posicao' que você definiu no Admin
+    this.produtos$ = this.productService.getProdutos();
   }
 
-  irParaOferta(produto: Produto) {
-    this.productService.registrarClique(produto).then(() => {
-      window.open(produto.link_compra, '_blank');
-    }).catch(() => window.open(produto.link_compra, '_blank'));
-    // O catch acima garante que o usuário vá para a loja mesmo se o contador falhar
+  ngOnInit(): void {}
+
+  // Função que abre o link e conta o clique no Firebase
+  irParaOferta(p: Produto): void {
+    if (p.id) {
+      // Registra o clique no banco
+      this.productService.registrarClique(p.id)
+        .then(() => {
+          // Abre o link do afiliado em uma nova aba
+          window.open(p.link_compra, '_blank');
+        })
+        .catch((err: any) => {
+          console.error("Erro ao registrar clique:", err);
+          // Abre o link mesmo se o contador falhar
+          window.open(p.link_compra, '_blank');
+        });
+    }
   }
 }

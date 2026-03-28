@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ProductService } from './services/product.service';
+import { NotificationService } from './services/notification.service';
 import { Loja } from './models/produto.model';
 import { Observable } from 'rxjs';
 
@@ -13,7 +14,10 @@ export class LojaComponent {
   lojas$: Observable<Loja[]>;
   novaLojaNome: string = '';
 
-  constructor(private productService: ProductService) {
+  constructor(
+    private productService: ProductService,
+    private notify: NotificationService
+  ) {
     this.lojas$ = this.productService.getLojas();
   }
 
@@ -22,16 +26,16 @@ export class LojaComponent {
       // Se o nome da loja não estiver vazio, procede com a adição
       this.productService.adicionarLoja(this.novaLojaNome.trim())
         .then(() => this.novaLojaNome = '')
-        .catch(err => alert('Erro ao adicionar loja: ' + err.message));
+        .catch((err: any) => this.notify.show('Erro ao adicionar loja: ' + err.message, 'error'));
     } else {
-      alert('O nome da loja não pode ser vazio.');
+      this.notify.show('O nome da loja não pode ser vazio.', 'error');
     }
   }
 
-  removerLoja(id: string) {
-    if (confirm('Deseja remover esta loja?')) {
+  async removerLoja(id: string) {
+    if (await this.notify.confirm('Deseja remover esta loja?')) {
       this.productService.removerLoja(id)
-        .catch(err => alert('Erro ao remover loja: ' + err.message));
+        .catch((err: any) => this.notify.show('Erro ao remover loja: ' + err.message, 'error'));
     }
   }
 }

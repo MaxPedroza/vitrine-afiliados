@@ -1,7 +1,29 @@
 <nav class="main-nav">
-  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Vitrine</a>
-  <a routerLink="/admin" routerLinkActive="active">Produtos</a>
-  <a routerLink="/lojas" routerLinkActive="active">Lojas</a>
-  <a routerLink="/analytics" routerLinkActive="active">Relatórios</a>
+  <div class="tabs-wrapper">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+      <span class="material-icons">storefront</span>
+      <span>Vitrine</span>
+    </a>
+    
+    <a routerLink="/admin" routerLinkActive="active">
+      <span class="material-icons">inventory_2</span>
+      <span>Produtos</span>
+    </a>
+    
+    <a routerLink="/lojas" routerLinkActive="active" title="Gerenciar Lojas">
+      <span class="material-icons">add_business</span>
+      <span>Lojas</span>
+    </a>
+    
+    <a routerLink="/analytics" routerLinkActive="active" title="Relatórios de Cliques">
+      <span class="material-icons">insights</span>
+      <span>Relatórios</span>
+    </a>
+  </div>
 </nav>
-<router-outlet />
+
+<div class="page-content">
+  <router-outlet></router-outlet>
+</div>
+
+<app-notification></app-notification>

@@ -1,1 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
+// Cores base extraídas das imagens
+$primary-purple: #9c27b0;
+$light-lilac: #f3e5f5;
+$bg-gray: #f5f5f5;
+$shopee-orange: #ff5722;
+$amazon-blue: #2196f3;
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: $bg-gray;
+}
+
+// Utilitários para os cards
+.card-shadow {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  background: #fff;
+}
