@@ -5,6 +5,12 @@
       <h1>Acesso à Loja</h1>
     </div>
 
+    <!-- DEBUG: Mostrar status de carregamento -->
+    <div style="background: #f0f0f0; padding: 10px; border-radius: 4px; margin-bottom: 20px; font-size: 12px; color: #666;">
+      <p>🔄 Loading: {{ (loading$ | async) }}</p>
+      <p>❌ Error: {{ (error$ | async) || 'Nenhum erro' }}</p>
+    </div>
+
     <form (ngSubmit)="fazerLogin()" class="login-form">
       <div class="form-group">
         <label for="email">Email</label>
@@ -14,8 +20,8 @@
           name="email"
           [(ngModel)]="email"
           placeholder="seu@email.com"
-          [disabled]="carregando"
-          (keyup)="erro = ''"
+          [disabled]="(loading$ | async) === true"
+          (focus)="error$.next('')"
         />
       </div>
 
@@ -28,15 +34,15 @@
             name="senha"
             [(ngModel)]="senha"
             placeholder="Digite sua senha"
-            [disabled]="carregando"
+            [disabled]="(loading$ | async) === true"
             (keyup.enter)="fazerLogin()"
-            (keyup)="erro = ''"
+            (focus)="error$.next('')"
           />
           <button 
             type="button" 
             class="btn-toggle-senha"
             (click)="alternarVisibilidadeSenha()"
-            [disabled]="carregando"
+            [disabled]="(loading$ | async) === true"
             title="Mostrar/Ocultar senha"
           >
             <span class="material-icons">
@@ -46,7 +52,7 @@
         </div>
       </div>
 
-      <div class="erro" *ngIf="erro">
+      <div class="erro" *ngIf="error$ | async as erro">
         <span class="material-icons">error</span>
         <span>{{ erro }}</span>
       </div>
@@ -54,17 +60,16 @@
       <button 
         type="submit" 
         class="btn-login"
-        [disabled]="carregando"
+        [disabled]="(loading$ | async) === true"
       >
-        <span class="material-icons" *ngIf="carregando">sync</span>
-        <span *ngIf="!carregando">{{ !carregando ? 'Acessar' : 'Carregando...' }}</span>
+        <span class="material-icons" *ngIf="loading$ | async">sync</span>
+        <span>{{ (loading$ | async) ? 'Carregando...' : 'Acessar' }}</span>
       </button>
     </form>
 
     <div class="login-info">
-      <p><strong>Credenciais padrão:</strong></p>
-      <p>Email: <code>admin@loja.com</code></p>
-      <p>Senha: <code>123456</code></p>
+      <p><strong>Firebase Authentication</strong></p>
+      <p>Use seu email e senha registrados</p>
     </div>
   </div>
 </div>

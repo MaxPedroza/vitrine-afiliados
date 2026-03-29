@@ -1,29 +1,37 @@
-import "./chunk-RDEUMOGX.js";
+import "./chunk-5BLHT7TR.js";
 import {
   FIREBASE_APP_NAME,
   FIREBASE_OPTIONS,
-  VERSION as VERSION2,
-  pendingUntilEvent,
-  ɵAngularFireSchedulers,
   ɵapplyMixins,
   ɵcacheInstance,
   ɵfirebaseAppFactory,
-  ɵgetAllInstancesOf,
-  ɵgetDefaultInstanceOf,
-  ɵlazySDKProxy,
-  ɵzoneWrap
-} from "./chunk-6ZUZ743O.js";
+  ɵlazySDKProxy
+} from "./chunk-OOOQIHOX.js";
+import {
+  firebase
+} from "./chunk-I2VGT6WW.js";
+import {
+  AppCheckInstances
+} from "./chunk-QJXRPUHS.js";
+import "./chunk-HFRDRGKM.js";
+import "./chunk-LUS5GPCB.js";
+import {
+  isPlatformServer
+} from "./chunk-O2GFVTEB.js";
+import {
+  VERSION,
+  pendingUntilEvent,
+  ɵAngularFireSchedulers
+} from "./chunk-SWUWZ3GL.js";
 import {
   Component,
   ComponentContainer,
   Deferred,
-  ErrorFactory,
   LogLevel,
   Logger,
   Provider,
   SDK_VERSION,
   Sha1,
-  _getProvider,
   _isFirebaseServerApp,
   _registerComponent,
   assert,
@@ -34,31 +42,21 @@ import {
   createMockUserToken,
   deepCopy,
   deepEqual,
-  deleteApp,
   errorPrefix,
-  firebase,
-  getApp,
-  getApps,
-  getGlobal,
   getModularInstance,
-  initializeApp,
-  initializeServerApp,
   isAdmin,
   isCloudWorkstation,
   isEmpty,
-  isIndexedDBAvailable,
   isMobileCordova,
   isNodeSdk,
   isReactNative,
   isValidFormat,
   jsonEval,
-  map as map2,
-  onLog,
+  map,
   pingServer,
   querystring,
   registerVersion,
   safeGet,
-  setLogLevel,
   stringLength,
   stringToByteArray,
   stringify,
@@ -66,10 +64,7 @@ import {
   validateArgCount,
   validateCallback,
   validateContextObject
-} from "./chunk-FYXMW7EO.js";
-import {
-  isPlatformServer
-} from "./chunk-O2GFVTEB.js";
+} from "./chunk-DN7ZBRWY.js";
 import {
   EnvironmentInjector,
   Inject,
@@ -79,7 +74,6 @@ import {
   NgZone,
   Optional,
   PLATFORM_ID,
-  VERSION,
   inject,
   setClassMetadata,
   ɵɵdefineInjectable,
@@ -95,13 +89,11 @@ import {
   Observable,
   Subject,
   asyncScheduler,
-  concatMap,
-  distinct,
   distinctUntilChanged,
   filter,
   first,
   from,
-  map,
+  map as map2,
   observeOn,
   of,
   scan,
@@ -111,7 +103,6 @@ import {
   subscribeOn,
   switchMap,
   switchMapTo,
-  timer,
   withLatestFrom
 } from "./chunk-ZNVZ47EP.js";
 import "./chunk-B2KI3AIV.js";
@@ -119,897 +110,6 @@ import {
   __async,
   __spreadValues
 } from "./chunk-35ENWJA4.js";
-
-// node_modules/@angular/fire/fesm2022/angular-fire-app.mjs
-var FirebaseApp = class {
-  constructor(app) {
-    return app;
-  }
-};
-var FirebaseApps = class {
-  constructor() {
-    return getApps();
-  }
-};
-var firebaseApp$ = timer(0, 300).pipe(concatMap(() => from(getApps())), distinct());
-function defaultFirebaseAppFactory(provided) {
-  if (provided && provided.length === 1) {
-    return provided[0];
-  }
-  return new FirebaseApp(getApp());
-}
-var PROVIDED_FIREBASE_APPS = new InjectionToken("angularfire2._apps");
-var DEFAULT_FIREBASE_APP_PROVIDER = {
-  provide: FirebaseApp,
-  useFactory: defaultFirebaseAppFactory,
-  deps: [[new Optional(), PROVIDED_FIREBASE_APPS]]
-};
-var FIREBASE_APPS_PROVIDER = {
-  provide: FirebaseApps,
-  deps: [[new Optional(), PROVIDED_FIREBASE_APPS]]
-};
-var FirebaseAppModule = class _FirebaseAppModule {
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  constructor(platformId) {
-    registerVersion("angularfire", VERSION2.full, "core");
-    registerVersion("angularfire", VERSION2.full, "app");
-    registerVersion("angular", VERSION.full, platformId.toString());
-  }
-  static ɵfac = function FirebaseAppModule_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _FirebaseAppModule)(ɵɵinject(PLATFORM_ID));
-  };
-  static ɵmod = ɵɵdefineNgModule({
-    type: _FirebaseAppModule
-  });
-  static ɵinj = ɵɵdefineInjector({
-    providers: [DEFAULT_FIREBASE_APP_PROVIDER, FIREBASE_APPS_PROVIDER]
-  });
-};
-(() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(FirebaseAppModule, [{
-    type: NgModule,
-    args: [{
-      providers: [DEFAULT_FIREBASE_APP_PROVIDER, FIREBASE_APPS_PROVIDER]
-    }]
-  }], () => [{
-    type: Object,
-    decorators: [{
-      type: Inject,
-      args: [PLATFORM_ID]
-    }]
-  }], null);
-})();
-var deleteApp2 = ɵzoneWrap(deleteApp, true);
-var getApp2 = ɵzoneWrap(getApp, true);
-var getApps2 = ɵzoneWrap(getApps, true);
-var initializeApp2 = ɵzoneWrap(initializeApp, true);
-var initializeServerApp2 = ɵzoneWrap(initializeServerApp, true);
-var onLog2 = ɵzoneWrap(onLog, true);
-var registerVersion2 = ɵzoneWrap(registerVersion, true);
-var setLogLevel2 = ɵzoneWrap(setLogLevel, true);
-
-// node_modules/@angular/fire/node_modules/@firebase/app-check/dist/esm/index.esm2017.js
-var APP_CHECK_STATES = /* @__PURE__ */ new Map();
-var DEFAULT_STATE = {
-  activated: false,
-  tokenObservers: []
-};
-var DEBUG_STATE = {
-  initialized: false,
-  enabled: false
-};
-function getStateReference(app) {
-  return APP_CHECK_STATES.get(app) || Object.assign({}, DEFAULT_STATE);
-}
-function setInitialState(app, state) {
-  APP_CHECK_STATES.set(app, state);
-  return APP_CHECK_STATES.get(app);
-}
-function getDebugState() {
-  return DEBUG_STATE;
-}
-var BASE_ENDPOINT = "https://content-firebaseappcheck.googleapis.com/v1";
-var EXCHANGE_DEBUG_TOKEN_METHOD = "exchangeDebugToken";
-var TOKEN_REFRESH_TIME = {
-  /**
-   * The offset time before token natural expiration to run the refresh.
-   * This is currently 5 minutes.
-   */
-  OFFSET_DURATION: 5 * 60 * 1e3,
-  /**
-   * This is the first retrial wait after an error. This is currently
-   * 30 seconds.
-   */
-  RETRIAL_MIN_WAIT: 30 * 1e3,
-  /**
-   * This is the maximum retrial wait, currently 16 minutes.
-   */
-  RETRIAL_MAX_WAIT: 16 * 60 * 1e3
-};
-var ONE_DAY = 24 * 60 * 60 * 1e3;
-var Refresher = class {
-  constructor(operation, retryPolicy, getWaitDuration, lowerBound, upperBound) {
-    this.operation = operation;
-    this.retryPolicy = retryPolicy;
-    this.getWaitDuration = getWaitDuration;
-    this.lowerBound = lowerBound;
-    this.upperBound = upperBound;
-    this.pending = null;
-    this.nextErrorWaitInterval = lowerBound;
-    if (lowerBound > upperBound) {
-      throw new Error("Proactive refresh lower bound greater than upper bound!");
-    }
-  }
-  start() {
-    this.nextErrorWaitInterval = this.lowerBound;
-    this.process(true).catch(() => {
-    });
-  }
-  stop() {
-    if (this.pending) {
-      this.pending.reject("cancelled");
-      this.pending = null;
-    }
-  }
-  isRunning() {
-    return !!this.pending;
-  }
-  process(hasSucceeded) {
-    return __async(this, null, function* () {
-      this.stop();
-      try {
-        this.pending = new Deferred();
-        this.pending.promise.catch((_e) => {
-        });
-        yield sleep(this.getNextRun(hasSucceeded));
-        this.pending.resolve();
-        yield this.pending.promise;
-        this.pending = new Deferred();
-        this.pending.promise.catch((_e) => {
-        });
-        yield this.operation();
-        this.pending.resolve();
-        yield this.pending.promise;
-        this.process(true).catch(() => {
-        });
-      } catch (error2) {
-        if (this.retryPolicy(error2)) {
-          this.process(false).catch(() => {
-          });
-        } else {
-          this.stop();
-        }
-      }
-    });
-  }
-  getNextRun(hasSucceeded) {
-    if (hasSucceeded) {
-      this.nextErrorWaitInterval = this.lowerBound;
-      return this.getWaitDuration();
-    } else {
-      const currentErrorWaitInterval = this.nextErrorWaitInterval;
-      this.nextErrorWaitInterval *= 2;
-      if (this.nextErrorWaitInterval > this.upperBound) {
-        this.nextErrorWaitInterval = this.upperBound;
-      }
-      return currentErrorWaitInterval;
-    }
-  }
-};
-function sleep(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
-var ERRORS = {
-  [
-    "already-initialized"
-    /* AppCheckError.ALREADY_INITIALIZED */
-  ]: "You have already called initializeAppCheck() for FirebaseApp {$appName} with different options. To avoid this error, call initializeAppCheck() with the same options as when it was originally called. This will return the already initialized instance.",
-  [
-    "use-before-activation"
-    /* AppCheckError.USE_BEFORE_ACTIVATION */
-  ]: "App Check is being used before initializeAppCheck() is called for FirebaseApp {$appName}. Call initializeAppCheck() before instantiating other Firebase services.",
-  [
-    "fetch-network-error"
-    /* AppCheckError.FETCH_NETWORK_ERROR */
-  ]: "Fetch failed to connect to a network. Check Internet connection. Original error: {$originalErrorMessage}.",
-  [
-    "fetch-parse-error"
-    /* AppCheckError.FETCH_PARSE_ERROR */
-  ]: "Fetch client could not parse response. Original error: {$originalErrorMessage}.",
-  [
-    "fetch-status-error"
-    /* AppCheckError.FETCH_STATUS_ERROR */
-  ]: "Fetch server returned an HTTP error status. HTTP status: {$httpStatus}.",
-  [
-    "storage-open"
-    /* AppCheckError.STORAGE_OPEN */
-  ]: "Error thrown when opening storage. Original error: {$originalErrorMessage}.",
-  [
-    "storage-get"
-    /* AppCheckError.STORAGE_GET */
-  ]: "Error thrown when reading from storage. Original error: {$originalErrorMessage}.",
-  [
-    "storage-set"
-    /* AppCheckError.STORAGE_WRITE */
-  ]: "Error thrown when writing to storage. Original error: {$originalErrorMessage}.",
-  [
-    "recaptcha-error"
-    /* AppCheckError.RECAPTCHA_ERROR */
-  ]: "ReCAPTCHA error.",
-  [
-    "initial-throttle"
-    /* AppCheckError.INITIAL_THROTTLE */
-  ]: `{$httpStatus} error. Attempts allowed again after {$time}`,
-  [
-    "throttled"
-    /* AppCheckError.THROTTLED */
-  ]: `Requests throttled due to previous {$httpStatus} error. Attempts allowed again after {$time}`
-};
-var ERROR_FACTORY = new ErrorFactory("appCheck", "AppCheck", ERRORS);
-function ensureActivated(app) {
-  if (!getStateReference(app).activated) {
-    throw ERROR_FACTORY.create("use-before-activation", {
-      appName: app.name
-    });
-  }
-}
-function exchangeToken(_0, _1) {
-  return __async(this, arguments, function* ({ url, body }, heartbeatServiceProvider) {
-    const headers = {
-      "Content-Type": "application/json"
-    };
-    const heartbeatService = heartbeatServiceProvider.getImmediate({
-      optional: true
-    });
-    if (heartbeatService) {
-      const heartbeatsHeader = yield heartbeatService.getHeartbeatsHeader();
-      if (heartbeatsHeader) {
-        headers["X-Firebase-Client"] = heartbeatsHeader;
-      }
-    }
-    const options = {
-      method: "POST",
-      body: JSON.stringify(body),
-      headers
-    };
-    let response;
-    try {
-      response = yield fetch(url, options);
-    } catch (originalError) {
-      throw ERROR_FACTORY.create("fetch-network-error", {
-        originalErrorMessage: originalError === null || originalError === void 0 ? void 0 : originalError.message
-      });
-    }
-    if (response.status !== 200) {
-      throw ERROR_FACTORY.create("fetch-status-error", {
-        httpStatus: response.status
-      });
-    }
-    let responseBody;
-    try {
-      responseBody = yield response.json();
-    } catch (originalError) {
-      throw ERROR_FACTORY.create("fetch-parse-error", {
-        originalErrorMessage: originalError === null || originalError === void 0 ? void 0 : originalError.message
-      });
-    }
-    const match = responseBody.ttl.match(/^([\d.]+)(s)$/);
-    if (!match || !match[2] || isNaN(Number(match[1]))) {
-      throw ERROR_FACTORY.create("fetch-parse-error", {
-        originalErrorMessage: `ttl field (timeToLive) is not in standard Protobuf Duration format: ${responseBody.ttl}`
-      });
-    }
-    const timeToLiveAsNumber = Number(match[1]) * 1e3;
-    const now = Date.now();
-    return {
-      token: responseBody.token,
-      expireTimeMillis: now + timeToLiveAsNumber,
-      issuedAtTimeMillis: now
-    };
-  });
-}
-function getExchangeDebugTokenRequest(app, debugToken) {
-  const { projectId, appId, apiKey } = app.options;
-  return {
-    url: `${BASE_ENDPOINT}/projects/${projectId}/apps/${appId}:${EXCHANGE_DEBUG_TOKEN_METHOD}?key=${apiKey}`,
-    body: {
-      // eslint-disable-next-line
-      debug_token: debugToken
-    }
-  };
-}
-var DB_NAME = "firebase-app-check-database";
-var DB_VERSION = 1;
-var STORE_NAME = "firebase-app-check-store";
-var DEBUG_TOKEN_KEY = "debug-token";
-var dbPromise = null;
-function getDBPromise() {
-  if (dbPromise) {
-    return dbPromise;
-  }
-  dbPromise = new Promise((resolve, reject) => {
-    try {
-      const request = indexedDB.open(DB_NAME, DB_VERSION);
-      request.onsuccess = (event) => {
-        resolve(event.target.result);
-      };
-      request.onerror = (event) => {
-        var _a;
-        reject(ERROR_FACTORY.create("storage-open", {
-          originalErrorMessage: (_a = event.target.error) === null || _a === void 0 ? void 0 : _a.message
-        }));
-      };
-      request.onupgradeneeded = (event) => {
-        const db = event.target.result;
-        switch (event.oldVersion) {
-          case 0:
-            db.createObjectStore(STORE_NAME, {
-              keyPath: "compositeKey"
-            });
-        }
-      };
-    } catch (e) {
-      reject(ERROR_FACTORY.create("storage-open", {
-        originalErrorMessage: e === null || e === void 0 ? void 0 : e.message
-      }));
-    }
-  });
-  return dbPromise;
-}
-function readTokenFromIndexedDB(app) {
-  return read(computeKey(app));
-}
-function writeTokenToIndexedDB(app, token) {
-  return write(computeKey(app), token);
-}
-function writeDebugTokenToIndexedDB(token) {
-  return write(DEBUG_TOKEN_KEY, token);
-}
-function readDebugTokenFromIndexedDB() {
-  return read(DEBUG_TOKEN_KEY);
-}
-function write(key, value) {
-  return __async(this, null, function* () {
-    const db = yield getDBPromise();
-    const transaction = db.transaction(STORE_NAME, "readwrite");
-    const store = transaction.objectStore(STORE_NAME);
-    const request = store.put({
-      compositeKey: key,
-      value
-    });
-    return new Promise((resolve, reject) => {
-      request.onsuccess = (_event) => {
-        resolve();
-      };
-      transaction.onerror = (event) => {
-        var _a;
-        reject(ERROR_FACTORY.create("storage-set", {
-          originalErrorMessage: (_a = event.target.error) === null || _a === void 0 ? void 0 : _a.message
-        }));
-      };
-    });
-  });
-}
-function read(key) {
-  return __async(this, null, function* () {
-    const db = yield getDBPromise();
-    const transaction = db.transaction(STORE_NAME, "readonly");
-    const store = transaction.objectStore(STORE_NAME);
-    const request = store.get(key);
-    return new Promise((resolve, reject) => {
-      request.onsuccess = (event) => {
-        const result = event.target.result;
-        if (result) {
-          resolve(result.value);
-        } else {
-          resolve(void 0);
-        }
-      };
-      transaction.onerror = (event) => {
-        var _a;
-        reject(ERROR_FACTORY.create("storage-get", {
-          originalErrorMessage: (_a = event.target.error) === null || _a === void 0 ? void 0 : _a.message
-        }));
-      };
-    });
-  });
-}
-function computeKey(app) {
-  return `${app.options.appId}-${app.name}`;
-}
-var logger = new Logger("@firebase/app-check");
-function readTokenFromStorage(app) {
-  return __async(this, null, function* () {
-    if (isIndexedDBAvailable()) {
-      let token = void 0;
-      try {
-        token = yield readTokenFromIndexedDB(app);
-      } catch (e) {
-        logger.warn(`Failed to read token from IndexedDB. Error: ${e}`);
-      }
-      return token;
-    }
-    return void 0;
-  });
-}
-function writeTokenToStorage(app, token) {
-  if (isIndexedDBAvailable()) {
-    return writeTokenToIndexedDB(app, token).catch((e) => {
-      logger.warn(`Failed to write token to IndexedDB. Error: ${e}`);
-    });
-  }
-  return Promise.resolve();
-}
-function readOrCreateDebugTokenFromStorage() {
-  return __async(this, null, function* () {
-    let existingDebugToken = void 0;
-    try {
-      existingDebugToken = yield readDebugTokenFromIndexedDB();
-    } catch (_e) {
-    }
-    if (!existingDebugToken) {
-      const newToken = crypto.randomUUID();
-      writeDebugTokenToIndexedDB(newToken).catch((e) => logger.warn(`Failed to persist debug token to IndexedDB. Error: ${e}`));
-      return newToken;
-    } else {
-      return existingDebugToken;
-    }
-  });
-}
-function isDebugMode() {
-  const debugState = getDebugState();
-  return debugState.enabled;
-}
-function getDebugToken() {
-  return __async(this, null, function* () {
-    const state = getDebugState();
-    if (state.enabled && state.token) {
-      return state.token.promise;
-    } else {
-      throw Error(`
-            Can't get debug token in production mode.
-        `);
-    }
-  });
-}
-function initializeDebugMode() {
-  const globals = getGlobal();
-  const debugState = getDebugState();
-  debugState.initialized = true;
-  if (typeof globals.FIREBASE_APPCHECK_DEBUG_TOKEN !== "string" && globals.FIREBASE_APPCHECK_DEBUG_TOKEN !== true) {
-    return;
-  }
-  debugState.enabled = true;
-  const deferredToken = new Deferred();
-  debugState.token = deferredToken;
-  if (typeof globals.FIREBASE_APPCHECK_DEBUG_TOKEN === "string") {
-    deferredToken.resolve(globals.FIREBASE_APPCHECK_DEBUG_TOKEN);
-  } else {
-    deferredToken.resolve(readOrCreateDebugTokenFromStorage());
-  }
-}
-var defaultTokenErrorData = { error: "UNKNOWN_ERROR" };
-function formatDummyToken(tokenErrorData) {
-  return base64.encodeString(
-    JSON.stringify(tokenErrorData),
-    /* webSafe= */
-    false
-  );
-}
-function getToken$2(appCheck, forceRefresh = false, shouldLogErrors = false) {
-  return __async(this, null, function* () {
-    const app = appCheck.app;
-    ensureActivated(app);
-    const state = getStateReference(app);
-    let token = state.token;
-    let error2 = void 0;
-    if (token && !isValid(token)) {
-      state.token = void 0;
-      token = void 0;
-    }
-    if (!token) {
-      const cachedToken = yield state.cachedTokenPromise;
-      if (cachedToken) {
-        if (isValid(cachedToken)) {
-          token = cachedToken;
-        } else {
-          yield writeTokenToStorage(app, void 0);
-        }
-      }
-    }
-    if (!forceRefresh && token && isValid(token)) {
-      return {
-        token: token.token
-      };
-    }
-    let shouldCallListeners = false;
-    if (isDebugMode()) {
-      try {
-        if (!state.exchangeTokenPromise) {
-          state.exchangeTokenPromise = exchangeToken(getExchangeDebugTokenRequest(app, yield getDebugToken()), appCheck.heartbeatServiceProvider).finally(() => {
-            state.exchangeTokenPromise = void 0;
-          });
-          shouldCallListeners = true;
-        }
-        const tokenFromDebugExchange = yield state.exchangeTokenPromise;
-        yield writeTokenToStorage(app, tokenFromDebugExchange);
-        state.token = tokenFromDebugExchange;
-        return { token: tokenFromDebugExchange.token };
-      } catch (e) {
-        if (e.code === `appCheck/${"throttled"}` || e.code === `appCheck/${"initial-throttle"}`) {
-          logger.warn(e.message);
-        } else if (shouldLogErrors) {
-          logger.error(e);
-        }
-        return makeDummyTokenResult(e);
-      }
-    }
-    try {
-      if (!state.exchangeTokenPromise) {
-        state.exchangeTokenPromise = state.provider.getToken().finally(() => {
-          state.exchangeTokenPromise = void 0;
-        });
-        shouldCallListeners = true;
-      }
-      token = yield getStateReference(app).exchangeTokenPromise;
-    } catch (e) {
-      if (e.code === `appCheck/${"throttled"}` || e.code === `appCheck/${"initial-throttle"}`) {
-        logger.warn(e.message);
-      } else if (shouldLogErrors) {
-        logger.error(e);
-      }
-      error2 = e;
-    }
-    let interopTokenResult;
-    if (!token) {
-      interopTokenResult = makeDummyTokenResult(error2);
-    } else if (error2) {
-      if (isValid(token)) {
-        interopTokenResult = {
-          token: token.token,
-          internalError: error2
-        };
-      } else {
-        interopTokenResult = makeDummyTokenResult(error2);
-      }
-    } else {
-      interopTokenResult = {
-        token: token.token
-      };
-      state.token = token;
-      yield writeTokenToStorage(app, token);
-    }
-    if (shouldCallListeners) {
-      notifyTokenListeners(app, interopTokenResult);
-    }
-    return interopTokenResult;
-  });
-}
-function getLimitedUseToken$1(appCheck) {
-  return __async(this, null, function* () {
-    const app = appCheck.app;
-    ensureActivated(app);
-    const { provider } = getStateReference(app);
-    if (isDebugMode()) {
-      const debugToken = yield getDebugToken();
-      const { token } = yield exchangeToken(getExchangeDebugTokenRequest(app, debugToken), appCheck.heartbeatServiceProvider);
-      return { token };
-    } else {
-      const { token } = yield provider.getToken();
-      return { token };
-    }
-  });
-}
-function addTokenListener(appCheck, type, listener, onError) {
-  const { app } = appCheck;
-  const state = getStateReference(app);
-  const tokenObserver = {
-    next: listener,
-    error: onError,
-    type
-  };
-  state.tokenObservers = [...state.tokenObservers, tokenObserver];
-  if (state.token && isValid(state.token)) {
-    const validToken = state.token;
-    Promise.resolve().then(() => {
-      listener({ token: validToken.token });
-      initTokenRefresher(appCheck);
-    }).catch(() => {
-    });
-  }
-  void state.cachedTokenPromise.then(() => initTokenRefresher(appCheck));
-}
-function removeTokenListener(app, listener) {
-  const state = getStateReference(app);
-  const newObservers = state.tokenObservers.filter((tokenObserver) => tokenObserver.next !== listener);
-  if (newObservers.length === 0 && state.tokenRefresher && state.tokenRefresher.isRunning()) {
-    state.tokenRefresher.stop();
-  }
-  state.tokenObservers = newObservers;
-}
-function initTokenRefresher(appCheck) {
-  const { app } = appCheck;
-  const state = getStateReference(app);
-  let refresher = state.tokenRefresher;
-  if (!refresher) {
-    refresher = createTokenRefresher(appCheck);
-    state.tokenRefresher = refresher;
-  }
-  if (!refresher.isRunning() && state.isTokenAutoRefreshEnabled) {
-    refresher.start();
-  }
-}
-function createTokenRefresher(appCheck) {
-  const { app } = appCheck;
-  return new Refresher(
-    // Keep in mind when this fails for any reason other than the ones
-    // for which we should retry, it will effectively stop the proactive refresh.
-    () => __async(null, null, function* () {
-      const state = getStateReference(app);
-      let result;
-      if (!state.token) {
-        result = yield getToken$2(appCheck);
-      } else {
-        result = yield getToken$2(appCheck, true);
-      }
-      if (result.error) {
-        throw result.error;
-      }
-      if (result.internalError) {
-        throw result.internalError;
-      }
-    }),
-    () => {
-      return true;
-    },
-    () => {
-      const state = getStateReference(app);
-      if (state.token) {
-        let nextRefreshTimeMillis = state.token.issuedAtTimeMillis + (state.token.expireTimeMillis - state.token.issuedAtTimeMillis) * 0.5 + 5 * 60 * 1e3;
-        const latestAllowableRefresh = state.token.expireTimeMillis - 5 * 60 * 1e3;
-        nextRefreshTimeMillis = Math.min(nextRefreshTimeMillis, latestAllowableRefresh);
-        return Math.max(0, nextRefreshTimeMillis - Date.now());
-      } else {
-        return 0;
-      }
-    },
-    TOKEN_REFRESH_TIME.RETRIAL_MIN_WAIT,
-    TOKEN_REFRESH_TIME.RETRIAL_MAX_WAIT
-  );
-}
-function notifyTokenListeners(app, token) {
-  const observers = getStateReference(app).tokenObservers;
-  for (const observer of observers) {
-    try {
-      if (observer.type === "EXTERNAL" && token.error != null) {
-        observer.error(token.error);
-      } else {
-        observer.next(token);
-      }
-    } catch (e) {
-    }
-  }
-}
-function isValid(token) {
-  return token.expireTimeMillis - Date.now() > 0;
-}
-function makeDummyTokenResult(error2) {
-  return {
-    token: formatDummyToken(defaultTokenErrorData),
-    error: error2
-  };
-}
-var AppCheckService = class {
-  constructor(app, heartbeatServiceProvider) {
-    this.app = app;
-    this.heartbeatServiceProvider = heartbeatServiceProvider;
-  }
-  _delete() {
-    const { tokenObservers } = getStateReference(this.app);
-    for (const tokenObserver of tokenObservers) {
-      removeTokenListener(this.app, tokenObserver.next);
-    }
-    return Promise.resolve();
-  }
-};
-function factory(app, heartbeatServiceProvider) {
-  return new AppCheckService(app, heartbeatServiceProvider);
-}
-function internalFactory(appCheck) {
-  return {
-    getToken: (forceRefresh) => getToken$2(appCheck, forceRefresh),
-    getLimitedUseToken: () => getLimitedUseToken$1(appCheck),
-    addTokenListener: (listener) => addTokenListener(appCheck, "INTERNAL", listener),
-    removeTokenListener: (listener) => removeTokenListener(appCheck.app, listener)
-  };
-}
-var name = "@firebase/app-check";
-var version = "0.10.1";
-function initializeAppCheck(app = getApp(), options) {
-  app = getModularInstance(app);
-  const provider = _getProvider(app, "app-check");
-  if (!getDebugState().initialized) {
-    initializeDebugMode();
-  }
-  if (isDebugMode()) {
-    void getDebugToken().then((token) => (
-      // Not using logger because I don't think we ever want this accidentally hidden.
-      console.log(`App Check debug token: ${token}. You will need to add it to your app's App Check settings in the Firebase console for it to work.`)
-    ));
-  }
-  if (provider.isInitialized()) {
-    const existingInstance = provider.getImmediate();
-    const initialOptions = provider.getOptions();
-    if (initialOptions.isTokenAutoRefreshEnabled === options.isTokenAutoRefreshEnabled && initialOptions.provider.isEqual(options.provider)) {
-      return existingInstance;
-    } else {
-      throw ERROR_FACTORY.create("already-initialized", {
-        appName: app.name
-      });
-    }
-  }
-  const appCheck = provider.initialize({ options });
-  _activate(app, options.provider, options.isTokenAutoRefreshEnabled);
-  if (getStateReference(app).isTokenAutoRefreshEnabled) {
-    addTokenListener(appCheck, "INTERNAL", () => {
-    });
-  }
-  return appCheck;
-}
-function _activate(app, provider, isTokenAutoRefreshEnabled = false) {
-  const state = setInitialState(app, Object.assign({}, DEFAULT_STATE));
-  state.activated = true;
-  state.provider = provider;
-  state.cachedTokenPromise = readTokenFromStorage(app).then((cachedToken) => {
-    if (cachedToken && isValid(cachedToken)) {
-      state.token = cachedToken;
-      notifyTokenListeners(app, { token: cachedToken.token });
-    }
-    return cachedToken;
-  });
-  state.isTokenAutoRefreshEnabled = isTokenAutoRefreshEnabled && app.automaticDataCollectionEnabled;
-  if (!app.automaticDataCollectionEnabled && isTokenAutoRefreshEnabled) {
-    logger.warn("`isTokenAutoRefreshEnabled` is true but `automaticDataCollectionEnabled` was set to false during `initializeApp()`. This blocks automatic token refresh.");
-  }
-  state.provider.initialize(app);
-}
-function setTokenAutoRefreshEnabled(appCheckInstance, isTokenAutoRefreshEnabled) {
-  const app = appCheckInstance.app;
-  const state = getStateReference(app);
-  if (state.tokenRefresher) {
-    if (isTokenAutoRefreshEnabled === true) {
-      state.tokenRefresher.start();
-    } else {
-      state.tokenRefresher.stop();
-    }
-  }
-  state.isTokenAutoRefreshEnabled = isTokenAutoRefreshEnabled;
-}
-function getToken(appCheckInstance, forceRefresh) {
-  return __async(this, null, function* () {
-    const result = yield getToken$2(appCheckInstance, forceRefresh);
-    if (result.error) {
-      throw result.error;
-    }
-    if (result.internalError) {
-      throw result.internalError;
-    }
-    return { token: result.token };
-  });
-}
-function getLimitedUseToken(appCheckInstance) {
-  return getLimitedUseToken$1(appCheckInstance);
-}
-function onTokenChanged(appCheckInstance, onNextOrObserver, onError, onCompletion) {
-  let nextFn = () => {
-  };
-  let errorFn = () => {
-  };
-  if (onNextOrObserver.next != null) {
-    nextFn = onNextOrObserver.next.bind(onNextOrObserver);
-  } else {
-    nextFn = onNextOrObserver;
-  }
-  if (onNextOrObserver.error != null) {
-    errorFn = onNextOrObserver.error.bind(onNextOrObserver);
-  } else if (onError) {
-    errorFn = onError;
-  }
-  addTokenListener(appCheckInstance, "EXTERNAL", nextFn, errorFn);
-  return () => removeTokenListener(appCheckInstance.app, nextFn);
-}
-var APP_CHECK_NAME = "app-check";
-var APP_CHECK_NAME_INTERNAL = "app-check-internal";
-function registerAppCheck() {
-  _registerComponent(new Component(
-    APP_CHECK_NAME,
-    (container) => {
-      const app = container.getProvider("app").getImmediate();
-      const heartbeatServiceProvider = container.getProvider("heartbeat");
-      return factory(app, heartbeatServiceProvider);
-    },
-    "PUBLIC"
-    /* ComponentType.PUBLIC */
-  ).setInstantiationMode(
-    "EXPLICIT"
-    /* InstantiationMode.EXPLICIT */
-  ).setInstanceCreatedCallback((container, _identifier, _appcheckService) => {
-    container.getProvider(APP_CHECK_NAME_INTERNAL).initialize();
-  }));
-  _registerComponent(new Component(
-    APP_CHECK_NAME_INTERNAL,
-    (container) => {
-      const appCheck = container.getProvider("app-check").getImmediate();
-      return internalFactory(appCheck);
-    },
-    "PUBLIC"
-    /* ComponentType.PUBLIC */
-  ).setInstantiationMode(
-    "EXPLICIT"
-    /* InstantiationMode.EXPLICIT */
-  ));
-  registerVersion(name, version);
-}
-registerAppCheck();
-
-// node_modules/@angular/fire/fesm2022/angular-fire-app-check.mjs
-var APP_CHECK_PROVIDER_NAME = "app-check";
-var AppCheck = class {
-  constructor(appCheck) {
-    return appCheck;
-  }
-};
-var AppCheckInstances = class {
-  constructor() {
-    return ɵgetAllInstancesOf(APP_CHECK_PROVIDER_NAME);
-  }
-};
-var appCheckInstance$ = timer(0, 300).pipe(concatMap(() => from(ɵgetAllInstancesOf(APP_CHECK_PROVIDER_NAME))), distinct());
-var PROVIDED_APP_CHECK_INSTANCES = new InjectionToken("angularfire2.app-check-instances");
-function defaultAppCheckInstanceFactory(provided, defaultApp) {
-  const defaultAppCheck = ɵgetDefaultInstanceOf(APP_CHECK_PROVIDER_NAME, provided, defaultApp);
-  return defaultAppCheck && new AppCheck(defaultAppCheck);
-}
-var LOCALHOSTS = ["localhost", "0.0.0.0", "127.0.0.1"];
-var isLocalhost = typeof window !== "undefined" && LOCALHOSTS.includes(window.location.hostname);
-var APP_CHECK_INSTANCES_PROVIDER = {
-  provide: AppCheckInstances,
-  deps: [[new Optional(), PROVIDED_APP_CHECK_INSTANCES]]
-};
-var DEFAULT_APP_CHECK_INSTANCE_PROVIDER = {
-  provide: AppCheck,
-  useFactory: defaultAppCheckInstanceFactory,
-  deps: [[new Optional(), PROVIDED_APP_CHECK_INSTANCES], FirebaseApp, PLATFORM_ID]
-};
-var AppCheckModule = class _AppCheckModule {
-  constructor() {
-    registerVersion("angularfire", VERSION2.full, "app-check");
-  }
-  static ɵfac = function AppCheckModule_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _AppCheckModule)();
-  };
-  static ɵmod = ɵɵdefineNgModule({
-    type: _AppCheckModule
-  });
-  static ɵinj = ɵɵdefineInjector({
-    providers: [DEFAULT_APP_CHECK_INSTANCE_PROVIDER, APP_CHECK_INSTANCES_PROVIDER]
-  });
-};
-(() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(AppCheckModule, [{
-    type: NgModule,
-    args: [{
-      providers: [DEFAULT_APP_CHECK_INSTANCE_PROVIDER, APP_CHECK_INSTANCES_PROVIDER]
-    }]
-  }], () => [], null);
-})();
-var getLimitedUseToken2 = ɵzoneWrap(getLimitedUseToken, true, 2);
-var getToken2 = ɵzoneWrap(getToken, true);
-var initializeAppCheck2 = ɵzoneWrap(initializeAppCheck, true);
-var onTokenChanged2 = ɵzoneWrap(onTokenChanged, true);
-var setTokenAutoRefreshEnabled2 = ɵzoneWrap(setTokenAutoRefreshEnabled, true);
 
 // node_modules/@angular/fire/fesm2022/angular-fire-compat-auth.mjs
 var proxyPolyfillCompat = {
@@ -1100,9 +200,9 @@ var AngularFireAuth = class _AngularFireAuth {
    * Observable of the currently signed-in user's credential, or null
    */
   credential;
-  constructor(options, name4, platformId, zone, schedulers, useEmulator, settings, tenantId, languageCode, useDeviceLanguage, persistence, _appCheckInstances) {
+  constructor(options, name3, platformId, zone, schedulers, useEmulator, settings, tenantId, languageCode, useDeviceLanguage, persistence, _appCheckInstances) {
     const logins = new Subject();
-    const auth = of(void 0).pipe(observeOn(schedulers.outsideAngular), switchMap(() => zone.runOutsideAngular(() => import("./index.esm-WVYYJA5M.js"))), map(() => ɵfirebaseAppFactory(options, zone, name4)), map((app) => ɵauthFactory(app, zone, useEmulator, tenantId, languageCode, useDeviceLanguage, settings, persistence)), shareReplay({
+    const auth = of(void 0).pipe(observeOn(schedulers.outsideAngular), switchMap(() => zone.runOutsideAngular(() => import("./index.esm-FV2AHOBP.js"))), map2(() => ɵfirebaseAppFactory(options, zone, name3)), map2((app) => ɵauthFactory(app, zone, useEmulator, tenantId, languageCode, useDeviceLanguage, settings, persistence)), shareReplay({
       bufferSize: 1,
       refCount: false
     }));
@@ -1133,15 +233,15 @@ var AngularFireAuth = class _AngularFireAuth {
       ).pipe(
         // handle the { user: { } } when a user is already logged in, rather have null
         // TODO handle the type corcersion better
-        map((credential) => credential?.user ? credential : null),
+        map2((credential) => credential?.user ? credential : null),
         subscribeOn(schedulers.outsideAngular),
         observeOn(schedulers.insideAngular)
       );
     }
     return ɵlazySDKProxy(this, auth, zone, {
       spy: {
-        apply: (name5, _, val) => {
-          if (name5.startsWith("signIn") || name5.startsWith("createUser")) {
+        apply: (name4, _, val) => {
+          if (name4.startsWith("signIn") || name4.startsWith("createUser")) {
             val.then((user) => logins.next(user));
           }
         }
@@ -1245,7 +345,7 @@ var AngularFireAuth = class _AngularFireAuth {
 ɵapplyMixins(AngularFireAuth, [proxyPolyfillCompat]);
 var AngularFireAuthModule = class _AngularFireAuthModule {
   constructor() {
-    firebase.registerVersion("angularfire", VERSION2.full, "auth-compat");
+    firebase.registerVersion("angularfire", VERSION.full, "auth-compat");
   }
   static ɵfac = function AngularFireAuthModule_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _AngularFireAuthModule)();
@@ -1267,11 +367,11 @@ var AngularFireAuthModule = class _AngularFireAuthModule {
 })();
 
 // node_modules/@angular/fire/node_modules/@firebase/database/dist/index.esm2017.js
-var name2 = "@firebase/database";
-var version2 = "1.0.20";
+var name = "@firebase/database";
+var version = "1.0.20";
 var SDK_VERSION2 = "";
-function setSDKVersion(version4) {
-  SDK_VERSION2 = version4;
+function setSDKVersion(version3) {
+  SDK_VERSION2 = version3;
 }
 var DOMStorageWrapper = class {
   /**
@@ -1306,8 +406,8 @@ var DOMStorageWrapper = class {
   remove(key) {
     this.domStorage_.removeItem(this.prefixedName_(key));
   }
-  prefixedName_(name4) {
-    return this.prefix_ + name4;
+  prefixedName_(name3) {
+    return this.prefix_ + name3;
   }
   toString() {
     return this.domStorage_.toString();
@@ -1379,33 +479,33 @@ var buildLogMessage_ = function(...varArgs) {
   }
   return message;
 };
-var logger2 = null;
+var logger = null;
 var firstLog_ = true;
 var enableLogging$1 = function(logger_, persistent) {
   assert(!persistent || logger_ === true || logger_ === false, "Can't turn on custom loggers persistently.");
   if (logger_ === true) {
     logClient.logLevel = LogLevel.VERBOSE;
-    logger2 = logClient.log.bind(logClient);
+    logger = logClient.log.bind(logClient);
     if (persistent) {
       SessionStorage.set("logging_enabled", true);
     }
   } else if (typeof logger_ === "function") {
-    logger2 = logger_;
+    logger = logger_;
   } else {
-    logger2 = null;
+    logger = null;
     SessionStorage.remove("logging_enabled");
   }
 };
 var log = function(...varArgs) {
   if (firstLog_ === true) {
     firstLog_ = false;
-    if (logger2 === null && SessionStorage.get("logging_enabled") === true) {
+    if (logger === null && SessionStorage.get("logging_enabled") === true) {
       enableLogging$1(true);
     }
   }
-  if (logger2) {
+  if (logger) {
     const message = buildLogMessage_.apply(null, varArgs);
-    logger2(message);
+    logger(message);
   }
 };
 var logWrapper = function(prefix) {
@@ -1848,11 +948,11 @@ var StatsCollection = class {
   constructor() {
     this.counters_ = {};
   }
-  incrementCounter(name4, amount = 1) {
-    if (!contains(this.counters_, name4)) {
-      this.counters_[name4] = 0;
+  incrementCounter(name3, amount = 1) {
+    if (!contains(this.counters_, name3)) {
+      this.counters_[name3] = 0;
     }
-    this.counters_[name4] += amount;
+    this.counters_[name3] += amount;
   }
   get() {
     return deepCopy(this.counters_);
@@ -2952,14 +2052,14 @@ var Connection = class {
    */
   onHandshake_(handshake) {
     const timestamp = handshake.ts;
-    const version4 = handshake.v;
+    const version3 = handshake.v;
     const host = handshake.h;
     this.sessionId = handshake.s;
     this.repoInfo_.host = host;
     if (this.state_ === 0) {
       this.conn_.start();
       this.onConnectionEstablished_(this.conn_, timestamp);
-      if (PROTOCOL_VERSION !== version4) {
+      if (PROTOCOL_VERSION !== version3) {
         warn("Protocol version mismatch detected");
       }
       this.tryStartUpgrade_();
@@ -4244,12 +3344,12 @@ var PersistentConnection = class _PersistentConnection extends ServerActions {
 PersistentConnection.nextPersistentConnectionId_ = 0;
 PersistentConnection.nextConnectionId_ = 0;
 var NamedNode = class _NamedNode {
-  constructor(name4, node) {
-    this.name = name4;
+  constructor(name3, node) {
+    this.name = name3;
     this.node = node;
   }
-  static Wrap(name4, node) {
-    return new _NamedNode(name4, node);
+  static Wrap(name3, node) {
+    return new _NamedNode(name3, node);
   }
 };
 var Index = class {
@@ -4303,7 +3403,7 @@ var KeyIndex = class extends Index {
   maxPost() {
     return new NamedNode(MAX_NAME, __EMPTY_NODE);
   }
-  makePost(indexValue, name4) {
+  makePost(indexValue, name3) {
     assert(typeof indexValue === "string", "KeyIndex indexValue must always be a string.");
     return new NamedNode(indexValue, __EMPTY_NODE);
   }
@@ -5100,9 +4200,9 @@ var PriorityIndex = class extends Index {
   maxPost() {
     return new NamedNode(MAX_NAME, new LeafNode("[PRIORITY-POST]", MAX_NODE$1));
   }
-  makePost(indexValue, name4) {
+  makePost(indexValue, name3) {
     const priorityNode = nodeFromJSON$1(indexValue);
-    return new NamedNode(name4, new LeafNode("[PRIORITY-POST]", priorityNode));
+    return new NamedNode(name3, new LeafNode("[PRIORITY-POST]", priorityNode));
   }
   /**
    * @returns String representation for inclusion in a query spec
@@ -5247,7 +4347,7 @@ var IndexMap = class _IndexMap {
    * Ensure that this node is properly tracked in any indexes that we're maintaining
    */
   addToIndexes(namedNode, existingChildren) {
-    const newIndexes = map2(this.indexes_, (indexedChildren, indexName) => {
+    const newIndexes = map(this.indexes_, (indexedChildren, indexName) => {
       const index = safeGet(this.indexSet_, indexName);
       assert(index, "Missing index implementation for " + indexName);
       if (indexedChildren === fallbackObject) {
@@ -5281,7 +4381,7 @@ var IndexMap = class _IndexMap {
    * Create a new IndexMap instance with the given value removed
    */
   removeFromIndexes(namedNode, existingChildren) {
-    const newIndexes = map2(this.indexes_, (indexedChildren) => {
+    const newIndexes = map(this.indexes_, (indexedChildren) => {
       if (indexedChildren === fallbackObject) {
         return indexedChildren;
       } else {
@@ -5712,10 +4812,10 @@ var PathIndex = class extends Index {
       return indexCmp;
     }
   }
-  makePost(indexValue, name4) {
+  makePost(indexValue, name3) {
     const valueNode = nodeFromJSON(indexValue);
     const node = ChildrenNode.EMPTY_NODE.updateChild(this.indexPath_, valueNode);
-    return new NamedNode(name4, node);
+    return new NamedNode(name3, node);
   }
   maxPost() {
     const node = ChildrenNode.EMPTY_NODE.updateChild(this.indexPath_, MAX_NODE);
@@ -5746,9 +4846,9 @@ var ValueIndex = class extends Index {
   maxPost() {
     return NamedNode.MAX;
   }
-  makePost(indexValue, name4) {
+  makePost(indexValue, name3) {
     const valueNode = nodeFromJSON(indexValue);
-    return new NamedNode(name4, valueNode);
+    return new NamedNode(name3, valueNode);
   }
   /**
    * @returns String representation for inclusion in a query spec
@@ -5882,9 +4982,9 @@ var RangedFilter = class _RangedFilter {
     }
     let filtered = newSnap.withIndex(this.index_);
     filtered = filtered.updatePriority(ChildrenNode.EMPTY_NODE);
-    const self2 = this;
+    const self = this;
     newSnap.forEachChild(PRIORITY_INDEX, (key, childNode) => {
-      if (!self2.matches(new NamedNode(key, childNode))) {
+      if (!self.matches(new NamedNode(key, childNode))) {
         filtered = filtered.updateImmediateChild(key, ChildrenNode.EMPTY_NODE);
       }
     });
@@ -7317,34 +6417,34 @@ function writeTreeResetTree_(writeTree) {
     writeTree.lastWriteId = -1;
   }
 }
-function writeTreeDefaultFilter_(write2) {
-  return write2.visible;
+function writeTreeDefaultFilter_(write) {
+  return write.visible;
 }
 function writeTreeLayerTree_(writes, filter2, treeRoot) {
   let compoundWrite = CompoundWrite.empty();
   for (let i = 0; i < writes.length; ++i) {
-    const write2 = writes[i];
-    if (filter2(write2)) {
-      const writePath = write2.path;
+    const write = writes[i];
+    if (filter2(write)) {
+      const writePath = write.path;
       let relativePath;
-      if (write2.snap) {
+      if (write.snap) {
         if (pathContains(treeRoot, writePath)) {
           relativePath = newRelativePath(treeRoot, writePath);
-          compoundWrite = compoundWriteAddWrite(compoundWrite, relativePath, write2.snap);
+          compoundWrite = compoundWriteAddWrite(compoundWrite, relativePath, write.snap);
         } else if (pathContains(writePath, treeRoot)) {
           relativePath = newRelativePath(writePath, treeRoot);
-          compoundWrite = compoundWriteAddWrite(compoundWrite, newEmptyPath(), write2.snap.getChild(relativePath));
+          compoundWrite = compoundWriteAddWrite(compoundWrite, newEmptyPath(), write.snap.getChild(relativePath));
         } else ;
-      } else if (write2.children) {
+      } else if (write.children) {
         if (pathContains(treeRoot, writePath)) {
           relativePath = newRelativePath(treeRoot, writePath);
-          compoundWrite = compoundWriteAddWrites(compoundWrite, relativePath, write2.children);
+          compoundWrite = compoundWriteAddWrites(compoundWrite, relativePath, write.children);
         } else if (pathContains(writePath, treeRoot)) {
           relativePath = newRelativePath(writePath, treeRoot);
           if (pathIsEmpty(relativePath)) {
-            compoundWrite = compoundWriteAddWrites(compoundWrite, newEmptyPath(), write2.children);
+            compoundWrite = compoundWriteAddWrites(compoundWrite, newEmptyPath(), write.children);
           } else {
-            const child2 = safeGet(write2.children, pathGetFront(relativePath));
+            const child2 = safeGet(write.children, pathGetFront(relativePath));
             if (child2) {
               const deepNode = child2.getChild(pathPopFront(relativePath));
               compoundWrite = compoundWriteAddWrite(compoundWrite, newEmptyPath(), deepNode);
@@ -7382,8 +6482,8 @@ function writeTreeCalcCompleteEventCache(writeTree, treePath, completeServerCach
       if (!includeHiddenWrites && completeServerCache == null && !compoundWriteHasCompleteWrite(merge2, newEmptyPath())) {
         return null;
       } else {
-        const filter2 = function(write2) {
-          return (write2.visible || includeHiddenWrites) && (!writeIdsToExclude || !~writeIdsToExclude.indexOf(write2.writeId)) && (pathContains(write2.path, treePath) || pathContains(treePath, write2.path));
+        const filter2 = function(write) {
+          return (write.visible || includeHiddenWrites) && (!writeIdsToExclude || !~writeIdsToExclude.indexOf(write.writeId)) && (pathContains(write.path, treePath) || pathContains(treePath, write.path));
         };
         const mergeAtPath = writeTreeLayerTree_(writeTree.allWrites, filter2, treePath);
         const layeredCache = completeServerCache || ChildrenNode.EMPTY_NODE;
@@ -7819,8 +6919,8 @@ function viewProcessorAckUserWrite(viewProcessor, viewCache, ackPath, affectedTr
       return viewProcessorApplyServerOverwrite(viewProcessor, viewCache, ackPath, serverCache.getNode().getChild(ackPath), writesCache, completeCache, filterServerNode, accumulator);
     } else if (pathIsEmpty(ackPath)) {
       let changedChildren = new ImmutableTree(null);
-      serverCache.getNode().forEachChild(KEY_INDEX, (name4, node) => {
-        changedChildren = changedChildren.set(new Path(name4), node);
+      serverCache.getNode().forEachChild(KEY_INDEX, (name3, node) => {
+        changedChildren = changedChildren.set(new Path(name3), node);
       });
       return viewProcessorApplyServerMerge(viewProcessor, viewCache, ackPath, changedChildren, writesCache, completeCache, filterServerNode, accumulator);
     } else {
@@ -8153,20 +7253,20 @@ function syncTreeApplyUserMerge(syncTree, path, changedChildren, writeId) {
   return syncTreeApplyOperationToSyncPoints_(syncTree, new Merge(newOperationSourceUser(), path, changeTree));
 }
 function syncTreeAckUserWrite(syncTree, writeId, revert = false) {
-  const write2 = writeTreeGetWrite(syncTree.pendingWriteTree_, writeId);
+  const write = writeTreeGetWrite(syncTree.pendingWriteTree_, writeId);
   const needToReevaluate = writeTreeRemoveWrite(syncTree.pendingWriteTree_, writeId);
   if (!needToReevaluate) {
     return [];
   } else {
     let affectedTree = new ImmutableTree(null);
-    if (write2.snap != null) {
+    if (write.snap != null) {
       affectedTree = affectedTree.set(newEmptyPath(), true);
     } else {
-      each(write2.children, (pathString) => {
+      each(write.children, (pathString) => {
         affectedTree = affectedTree.set(new Path(pathString), true);
       });
     }
-    return syncTreeApplyOperationToSyncPoints_(syncTree, new AckUserWrite(write2.path, affectedTree, revert));
+    return syncTreeApplyOperationToSyncPoints_(syncTree, new AckUserWrite(write.path, affectedTree, revert));
   }
 }
 function syncTreeApplyServerOverwrite(syncTree, path, newData) {
@@ -8619,8 +7719,8 @@ var Tree = class {
    * @param parent - Optional parent node.
    * @param node - Optional node to wrap.
    */
-  constructor(name4 = "", parent = null, node = { children: {}, childCount: 0 }) {
-    this.name = name4;
+  constructor(name3 = "", parent = null, node = { children: {}, childCount: 0 }) {
+    this.name = name3;
     this.parent = parent;
     this.node = node;
   }
@@ -8904,7 +8004,7 @@ function eventListRaise(eventList) {
     if (eventData !== null) {
       eventList.events[i] = null;
       const eventFn = eventData.getEventRunner();
-      if (logger2) {
+      if (logger) {
         log("event: " + eventData.toString());
       }
       exceptionGuard(eventFn);
@@ -9021,14 +8121,14 @@ function repoOnDataUpdate(repo, pathString, data, isMerge, tag) {
   let events = [];
   if (tag) {
     if (isMerge) {
-      const taggedChildren = map2(data, (raw) => nodeFromJSON(raw));
+      const taggedChildren = map(data, (raw) => nodeFromJSON(raw));
       events = syncTreeApplyTaggedQueryMerge(repo.serverSyncTree_, path, taggedChildren, tag);
     } else {
       const taggedSnap = nodeFromJSON(data);
       events = syncTreeApplyTaggedQueryOverwrite(repo.serverSyncTree_, path, taggedSnap, tag);
     }
   } else if (isMerge) {
-    const changedChildren = map2(data, (raw) => nodeFromJSON(raw));
+    const changedChildren = map(data, (raw) => nodeFromJSON(raw));
     events = syncTreeApplyServerMerge(repo.serverSyncTree_, path, changedChildren);
   } else {
     const snap = nodeFromJSON(data);
@@ -10199,9 +9299,9 @@ function push(parent, value) {
   validateWritablePath("push", parent._path);
   validateFirebaseDataArg("push", value, parent._path, true);
   const now = repoServerTime(parent._repo);
-  const name4 = nextPushId(now);
-  const thenablePushRef = child(parent, name4);
-  const pushRef = child(parent, name4);
+  const name3 = nextPushId(now);
+  const thenablePushRef = child(parent, name3);
+  const pushRef = child(parent, name3);
   let promise;
   if (value != null) {
     promise = set(pushRef, value).then(() => pushRef);
@@ -10817,8 +9917,8 @@ function goOnline(db) {
   db._checkNotDeleted("goOnline");
   repoResume(db._repo);
 }
-function enableLogging(logger3, persistent) {
-  enableLogging$1(logger3, persistent);
+function enableLogging(logger2, persistent) {
+  enableLogging$1(logger2, persistent);
 }
 function registerDatabase(variant) {
   setSDKVersion(SDK_VERSION);
@@ -10833,8 +9933,8 @@ function registerDatabase(variant) {
     "PUBLIC"
     /* ComponentType.PUBLIC */
   ).setMultipleInstances(true));
-  registerVersion(name2, version2, variant);
-  registerVersion(name2, version2, "esm2017");
+  registerVersion(name, version, variant);
+  registerVersion(name, version, "esm2017");
 }
 var SERVER_TIMESTAMP = {
   ".sv": "timestamp"
@@ -10892,8 +9992,8 @@ PersistentConnection.prototype.echo = function(data, onEcho) {
 registerDatabase();
 
 // node_modules/@angular/fire/node_modules/@firebase/database-compat/dist/index.esm2017.js
-var name3 = "@firebase/database-compat";
-var version3 = "2.0.11";
+var name2 = "@firebase/database-compat";
+var version2 = "2.0.11";
 var logClient2 = new Logger("@firebase/database-compat");
 var warn2 = function(msg) {
   const message = "FIREBASE WARNING: " + msg;
@@ -11265,29 +10365,29 @@ var Query = class _Query {
     validateArgCount("Query.orderByValue", 0, 0, arguments.length);
     return new _Query(this.database, query(this._delegate, orderByValue()));
   }
-  startAt(value = null, name4) {
+  startAt(value = null, name3) {
     validateArgCount("Query.startAt", 0, 2, arguments.length);
-    return new _Query(this.database, query(this._delegate, startAt(value, name4)));
+    return new _Query(this.database, query(this._delegate, startAt(value, name3)));
   }
-  startAfter(value = null, name4) {
+  startAfter(value = null, name3) {
     validateArgCount("Query.startAfter", 0, 2, arguments.length);
-    return new _Query(this.database, query(this._delegate, startAfter(value, name4)));
+    return new _Query(this.database, query(this._delegate, startAfter(value, name3)));
   }
-  endAt(value = null, name4) {
+  endAt(value = null, name3) {
     validateArgCount("Query.endAt", 0, 2, arguments.length);
-    return new _Query(this.database, query(this._delegate, endAt(value, name4)));
+    return new _Query(this.database, query(this._delegate, endAt(value, name3)));
   }
-  endBefore(value = null, name4) {
+  endBefore(value = null, name3) {
     validateArgCount("Query.endBefore", 0, 2, arguments.length);
-    return new _Query(this.database, query(this._delegate, endBefore(value, name4)));
+    return new _Query(this.database, query(this._delegate, endBefore(value, name3)));
   }
   /**
    * Load the selection of children with exactly the specified value, and, optionally,
    * the specified name.
    */
-  equalTo(value, name4) {
+  equalTo(value, name3) {
     validateArgCount("Query.equalTo", 1, 2, arguments.length);
-    return new _Query(this.database, query(this._delegate, equalTo(value, name4)));
+    return new _Query(this.database, query(this._delegate, equalTo(value, name3)));
   }
   /**
    * @returns URL for this location.
@@ -11531,8 +10631,8 @@ Database2.ServerValue = {
   TIMESTAMP: serverTimestamp(),
   increment: (delta) => increment(delta)
 };
-function initStandalone({ app, url, version: version4, customAuthImpl, customAppCheckImpl, namespace, nodeAdmin = false }) {
-  setSDKVersion(version4);
+function initStandalone({ app, url, version: version3, customAuthImpl, customAppCheckImpl, namespace, nodeAdmin = false }) {
+  setSDKVersion(version3);
   const container = new ComponentContainer("database-standalone");
   const authProvider = new Provider("auth-internal", container);
   authProvider.setComponent(new Component(
@@ -11583,7 +10683,7 @@ function registerDatabase2(instance) {
       ServerValue
     }
   ).setMultipleInstances(true));
-  instance.registerVersion(name3, version3);
+  instance.registerVersion(name2, version2);
 }
 registerDatabase2(firebase);
 
@@ -11619,7 +10719,7 @@ function fromRef(ref2, event, listenType = "on", scheduler = asyncScheduler) {
         }
       };
     }
-  }).pipe(map((payload) => {
+  }).pipe(map2((payload) => {
     const {
       snapshot,
       prevKey
@@ -11677,7 +10777,7 @@ function auditTrail(query2, events, scheduler) {
   return waitForLoaded(query2, auditTrail$, scheduler);
 }
 function loadedData(query2, scheduler) {
-  return fromRef(query2, "value", "on", scheduler).pipe(map((data) => {
+  return fromRef(query2, "value", "on", scheduler).pipe(map2((data) => {
     let lastKeyToLoad;
     data.payload.forEach((child2) => {
       lastKeyToLoad = child2.key;
@@ -11695,7 +10795,7 @@ function waitForLoaded(query2, action$, scheduler) {
     withLatestFrom(action$),
     // Get the latest values from the "loaded" and "child" datasets
     // We can use both datasets to form an array of the latest values.
-    map(([loaded, actions]) => {
+    map2(([loaded, actions]) => {
       const lastKeyToLoad = loaded.lastKeyToLoad;
       const loadedKeys = actions.map((snap) => snap.key);
       return {
@@ -11710,7 +10810,7 @@ function waitForLoaded(query2, action$, scheduler) {
     skipWhile((meta) => meta.loadedKeys.indexOf(meta.lastKeyToLoad) === -1),
     // Pluck off the meta data because the user only cares
     // to iterate through the snapshots
-    map((meta) => meta.actions)
+    map2((meta) => meta.actions)
   );
 }
 function createDataOperationMethod(ref2, operation) {
@@ -11842,7 +10942,7 @@ function createListReference(query2, afDatabase, injector) {
     },
     valueChanges(events, options) {
       const snapshotChanges$ = snapshotChanges(query2, events, outsideAngularScheduler);
-      return snapshotChanges$.pipe(map((actions) => actions.map((a) => {
+      return snapshotChanges$.pipe(map2((actions) => actions.map((a) => {
         if (options && options.idField) {
           return __spreadValues(__spreadValues({}, a.payload.val()), {
             [options.idField]: a.key
@@ -11876,7 +10976,7 @@ function createObjectReference(query2, afDatabase, injector) {
     },
     valueChanges() {
       const snapshotChanges$ = createObjectSnapshotChanges(query2, afDatabase.schedulers.outsideAngular)();
-      return snapshotChanges$.pipe(pendingUntilEvent(injector), map((action) => action.payload.exists() ? action.payload.val() : null));
+      return snapshotChanges$.pipe(pendingUntilEvent(injector), map2((action) => action.payload.exists() ? action.payload.val() : null));
     }
   };
 }
@@ -11886,10 +10986,10 @@ var AngularFireDatabase = class _AngularFireDatabase {
   schedulers;
   database;
   injector = inject(EnvironmentInjector);
-  constructor(options, name4, databaseURL, platformId, zone, schedulers, _useEmulator, auth, useAuthEmulator, authSettings, tenantId, languageCode, useDeviceLanguage, persistence, _appCheckInstances) {
+  constructor(options, name3, databaseURL, platformId, zone, schedulers, _useEmulator, auth, useAuthEmulator, authSettings, tenantId, languageCode, useDeviceLanguage, persistence, _appCheckInstances) {
     this.schedulers = schedulers;
     const useEmulator = _useEmulator;
-    const app = ɵfirebaseAppFactory(options, zone, name4);
+    const app = ɵfirebaseAppFactory(options, zone, name3);
     if (auth) {
       ɵauthFactory(app, zone, useAuthEmulator, tenantId, languageCode, useDeviceLanguage, authSettings, persistence);
     }
@@ -12034,7 +11134,7 @@ var AngularFireDatabase = class _AngularFireDatabase {
 })();
 var AngularFireDatabaseModule = class _AngularFireDatabaseModule {
   constructor() {
-    firebase.registerVersion("angularfire", VERSION2.full, "rtdb-compat");
+    firebase.registerVersion("angularfire", VERSION.full, "rtdb-compat");
   }
   static ɵfac = function AngularFireDatabaseModule_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _AngularFireDatabaseModule)();
@@ -12067,47 +11167,6 @@ export {
   stateChanges
 };
 /*! Bundled license information:
-
-@firebase/app-check/dist/esm/index.esm2017.js:
-@firebase/app-check/dist/esm/index.esm2017.js:
-@firebase/app-check/dist/esm/index.esm2017.js:
-@firebase/app-check/dist/esm/index.esm2017.js:
-@firebase/app-check/dist/esm/index.esm2017.js:
-@firebase/database/dist/index.esm2017.js:
-  (**
-   * @license
-   * Copyright 2020 Google LLC
-   *
-   * Licensed under the Apache License, Version 2.0 (the "License");
-   * you may not use this file except in compliance with the License.
-   * You may obtain a copy of the License at
-   *
-   *   http://www.apache.org/licenses/LICENSE-2.0
-   *
-   * Unless required by applicable law or agreed to in writing, software
-   * distributed under the License is distributed on an "AS IS" BASIS,
-   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   * See the License for the specific language governing permissions and
-   * limitations under the License.
-   *)
-
-@firebase/app-check/dist/esm/index.esm2017.js:
-  (**
-   * @license
-   * Copyright 2021 Google LLC
-   *
-   * Licensed under the Apache License, Version 2.0 (the "License");
-   * you may not use this file except in compliance with the License.
-   * You may obtain a copy of the License at
-   *
-   *   http://www.apache.org/licenses/LICENSE-2.0
-   *
-   * Unless required by applicable law or agreed to in writing, software
-   * distributed under the License is distributed on an "AS IS" BASIS,
-   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   * See the License for the specific language governing permissions and
-   * limitations under the License.
-   *)
 
 @firebase/database/dist/index.esm2017.js:
   (**
@@ -12158,6 +11217,24 @@ export {
    * See the License for the specific language governing permissions and
    * limitations under the License.
    *)
+  (**
+   * @license
+   * Copyright 2020 Google LLC
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *   http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   *)
+
+@firebase/database/dist/index.esm2017.js:
   (**
    * @license
    * Copyright 2020 Google LLC

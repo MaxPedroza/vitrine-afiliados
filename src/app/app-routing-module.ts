@@ -6,7 +6,7 @@ import { AnalyticsComponent } from './analytics.component';
 import { LojaComponent } from './loja.component';
 import { LoginComponent } from './login.component';
 import { SettingsComponent } from './settings.component';
-import { AuthGuard } from './services/auth.guard';
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
   { path: '', component: VitrineComponent },

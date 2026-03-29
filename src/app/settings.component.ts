@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from './services/auth.service';
 import { NotificationService } from './services/notification.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-settings',
@@ -8,7 +10,7 @@ import { NotificationService } from './services/notification.service';
   styleUrls: ['./settings.component.scss'],
   standalone: false
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent implements OnInit, OnDestroy {
   // Aba ativa
   abaSelecionada: 'senha' | 'email' = 'senha';
 
@@ -22,7 +24,6 @@ export class SettingsComponent implements OnInit {
   senhaAtualVisivel: boolean = false;
   novaSenhaVisivel: boolean = false;
   confSenhaVisivel: boolean = false;
-  carregandoSenha: boolean = false;
   erroSenha: string = '';
   sucessoSenha: string = '';
 
@@ -30,21 +31,33 @@ export class SettingsComponent implements OnInit {
   senhaAtualEmail: string = '';
   novoEmail: string = '';
   emailVisivel: boolean = false;
-  carregandoEmail: boolean = false;
   erroEmail: string = '';
   sucessoEmail: string = '';
 
+  // Observables do serviço
+  loading$;
+  error$;
+
+  private destroy$ = new Subject<void>();
+
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private notify: NotificationService
-  ) { }
+  ) {
+    this.loading$ = this.authService.loading$;
+    this.error$ = this.authService.error$;
+  }
 
   ngOnInit(): void {
-    const usuario = this.authService.obterUsuarioAtual();
-    if (usuario) {
-      this.emailAtual = usuario.email;
-      this.novoEmail = usuario.email;
-    }
+    // Obtém dados do usuário autenticado
+    this.authService.user$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(user => {
+        if (user) {
+          this.emailAtual = user.email || '';
+          this.novoEmail = user.email || '';
+        }
+      });
   }
 
   // ===== MÉTODOS DE SENHA =====
@@ -53,11 +66,6 @@ export class SettingsComponent implements OnInit {
     this.sucessoSenha = '';
 
     // Validação
-    if (!this.senhaAtualSenha.trim()) {
-      this.erroSenha = 'Digite sua senha atual';
-      return;
-    }
-
     if (!this.novaSenha.trim()) {
       this.erroSenha = 'Digite uma nova senha';
       return;
@@ -73,33 +81,28 @@ export class SettingsComponent implements OnInit {
       return;
     }
 
-    if (this.senhaAtualSenha === this.novaSenha) {
-      this.erroSenha = 'A nova senha é igual à atual';
-      return;
-    }
-
-    this.carregandoSenha = true;
-
-    setTimeout(() => {
-      const sucesso = this.authService.alterarSenha(this.senhaAtualSenha, this.novaSenha);
-      
-      if (sucesso) {
-        this.sucessoSenha = '✅ Senha alterada com sucesso!';
-        this.notify.show('Senha alterada! 🔐', 'success');
-        
-        // Limpa formulário
-        this.senhaAtualSenha = '';
-        this.novaSenha = '';
-        this.confirmarSenha = '';
-        
-        setTimeout(() => this.sucessoSenha = '', 3000);
-      } else {
-        this.erroSenha = 'Senha atual incorreta';
-        this.notify.show('Erro: Senha atual incorreta', 'error');
-      }
-      
-      this.carregandoSenha = false;
-    }, 300);
+    // Faz requisição para alterar senha
+    this.authService.alterarSenha(this.novaSenha)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.sucessoSenha = '✅ Senha alterada com sucesso!';
+          this.notify.show('Senha alterada! 🔐', 'success');
+          
+          // Limpa formulário
+          this.novaSenha = '';
+          this.confirmarSenha = '';
+          this.senhaAtualSenha = '';
+          
+          setTimeout(() => this.sucessoSenha = '', 3000);
+        },
+        error: (err) => {
+          const msg = this.authService.error$.value;
+          this.erroSenha = msg || 'Erro ao alterar senha';
+          this.notify.show(this.erroSenha, 'error');
+          console.error('❌ Erro ao alterar senha:', err);
+        }
+      });
   }
 
   alternarVisibilidadeSenhaAtual(): void {
@@ -120,11 +123,6 @@ export class SettingsComponent implements OnInit {
     this.sucessoEmail = '';
 
     // Validação
-    if (!this.senhaAtualEmail.trim()) {
-      this.erroEmail = 'Digite sua senha para confirmar';
-      return;
-    }
-
     if (!this.novoEmail.trim()) {
       this.erroEmail = 'Digite um novo email';
       return;
@@ -135,29 +133,35 @@ export class SettingsComponent implements OnInit {
       return;
     }
 
-    this.carregandoEmail = true;
+    // Validado email básico
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.novoEmail)) {
+      this.erroEmail = 'Email inválido';
+      return;
+    }
 
-    setTimeout(() => {
-      const sucesso = this.authService.alterarEmail(this.senhaAtualEmail, this.novoEmail);
-      
-      if (sucesso) {
-        this.sucessoEmail = '✅ Email alterado com sucesso!';
-        this.notify.show('Email alterado! 📧', 'success');
-        
-        // Atualiza email atual
-        this.emailAtual = this.novoEmail;
-        
-        // Limpa senha
-        this.senhaAtualEmail = '';
-        
-        setTimeout(() => this.sucessoEmail = '', 3000);
-      } else {
-        this.erroEmail = 'Email inválido ou senha incorreta';
-        this.notify.show('Erro ao alterar email', 'error');
-      }
-      
-      this.carregandoEmail = false;
-    }, 300);
+    // Faz requisição para alterar email
+    this.authService.alterarEmail(this.novoEmail)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.sucessoEmail = '✅ Email alterado com sucesso!';
+          this.notify.show('Email alterado! 📧', 'success');
+          
+          // Atualiza email atual
+          this.emailAtual = this.novoEmail;
+          
+          // Limpa formulário
+          this.senhaAtualEmail = '';
+          
+          setTimeout(() => this.sucessoEmail = '', 3000);
+        },
+        error: (err) => {
+          const msg = this.authService.error$.value;
+          this.erroEmail = msg || 'Erro ao alterar email';
+          this.notify.show(this.erroEmail, 'error');
+          console.error('❌ Erro ao alterar email:', err);
+        }
+      });
   }
 
   alternarVisibilidadeEmail(): void {
@@ -170,5 +174,10 @@ export class SettingsComponent implements OnInit {
     this.sucessoSenha = '';
     this.erroEmail = '';
     this.sucessoEmail = '';
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

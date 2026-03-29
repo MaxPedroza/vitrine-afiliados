@@ -44,14 +44,14 @@
               name="senhaAtualSenha"
               [(ngModel)]="senhaAtualSenha"
               placeholder="Digite sua senha atual"
-              [disabled]="carregandoSenha"
+              [disabled]="(loading$ | async) === true"
               (keyup)="erroSenha = ''"
             />
             <button 
               type="button" 
               class="btn-toggle"
               (click)="alternarVisibilidadeSenhaAtual()"
-              [disabled]="carregandoSenha"
+              [disabled]="(loading$ | async) === true"
             >
               <span class="material-icons">
                 {{ senhaAtualVisivel ? 'visibility_off' : 'visibility' }}
@@ -70,14 +70,14 @@
               name="novaSenha"
               [(ngModel)]="novaSenha"
               placeholder="Digite uma nova senha"
-              [disabled]="carregandoSenha"
+              [disabled]="(loading$ | async) === true"
               (keyup)="erroSenha = ''"
             />
             <button 
               type="button" 
               class="btn-toggle"
               (click)="alternarVisibilidadeNovaSenha()"
-              [disabled]="carregandoSenha"
+              [disabled]="(loading$ | async) === true"
             >
               <span class="material-icons">
                 {{ novaSenhaVisivel ? 'visibility_off' : 'visibility' }}
@@ -97,14 +97,14 @@
               name="confirmarSenha"
               [(ngModel)]="confirmarSenha"
               placeholder="Repita a nova senha"
-              [disabled]="carregandoSenha"
+              [disabled]="(loading$ | async) === true"
               (keyup)="erroSenha = ''"
             />
             <button 
               type="button" 
               class="btn-toggle"
               (click)="alternarVisibilidadeConfSenha()"
-              [disabled]="carregandoSenha"
+              [disabled]="(loading$ | async) === true"
             >
               <span class="material-icons">
                 {{ confSenhaVisivel ? 'visibility_off' : 'visibility' }}
@@ -129,10 +129,10 @@
         <button 
           type="submit" 
           class="btn-salvar"
-          [disabled]="carregandoSenha"
+          [disabled]="(loading$ | async) === true"
         >
-          <span class="material-icons" *ngIf="carregandoSenha">sync</span>
-          <span>{{ carregandoSenha ? 'Atualizando...' : 'Salvar Nova Senha' }}</span>
+          <span class="material-icons" *ngIf="loading$ | async">sync</span>
+          <span>{{ (loading$ | async) ? 'Atualizando...' : 'Salvar Nova Senha' }}</span>
         </button>
       </form>
     </div>
@@ -154,7 +154,7 @@
             name="novoEmail"
             [(ngModel)]="novoEmail"
             placeholder="seu@email.com"
-            [disabled]="carregandoEmail"
+            [disabled]="(loading$ | async) === true"
             (keyup)="erroEmail = ''"
           />
         </div>
@@ -169,14 +169,14 @@
               name="senhaAtualEmail"
               [(ngModel)]="senhaAtualEmail"
               placeholder="Digite sua senha"
-              [disabled]="carregandoEmail"
+              [disabled]="(loading$ | async) === true"
               (keyup)="erroEmail = ''"
             />
             <button 
               type="button" 
               class="btn-toggle"
               (click)="alternarVisibilidadeEmail()"
-              [disabled]="carregandoEmail"
+              [disabled]="(loading$ | async) === true"
             >
               <span class="material-icons">
                 {{ emailVisivel ? 'visibility_off' : 'visibility' }}
@@ -201,10 +201,10 @@
         <button 
           type="submit" 
           class="btn-salvar"
-          [disabled]="carregandoEmail"
+          [disabled]="(loading$ | async) === true"
         >
-          <span class="material-icons" *ngIf="carregandoEmail">sync</span>
-          <span>{{ carregandoEmail ? 'Atualizando...' : 'Salvar Novo Email' }}</span>
+          <span class="material-icons" *ngIf="loading$ | async">sync</span>
+          <span>{{ (loading$ | async) ? 'Atualizando...' : 'Salvar Novo Email' }}</span>
         </button>
       </form>
     </div>

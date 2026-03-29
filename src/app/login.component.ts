@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from './services/auth.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -8,26 +10,35 @@ import { AuthService } from './services/auth.service';
   styleUrls: ['./login.component.scss'],
   standalone: false
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   email: string = '';
   senha: string = '';
   senhaVisivel: boolean = false;
-  carregando: boolean = false;
-  erro: string = '';
   returnUrl: string = '';
+  private destroy$ = new Subject<void>();
+
+  // Observables do serviço
+  loading$;
+  error$;
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private router: Router,
     private route: ActivatedRoute
-  ) { }
+  ) {
+    this.loading$ = this.authService.loading$;
+    this.error$ = this.authService.error$;
+  }
 
   ngOnInit(): void {
     // Se já está autenticado, redireciona para admin
-    if (this.authService.estaAutenticado()) {
-      this.router.navigate(['/admin']);
-      return;
-    }
+    this.authService.isAuthenticated()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(isAuth => {
+        if (isAuth) {
+          this.router.navigate(['/admin']);
+        }
+      });
 
     // Pega URL para redirecionar depois do login
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/admin';
@@ -36,24 +47,22 @@ export class LoginComponent implements OnInit {
   fazerLogin(): void {
     // Validação
     if (!this.email.trim() || !this.senha.trim()) {
-      this.erro = 'Email e senha são obrigatórios!';
+      this.authService.error$.next('Email e senha são obrigatórios!');
       return;
     }
 
-    this.carregando = true;
-    this.erro = '';
-
-    // Tenta fazer login
-    setTimeout(() => {
-      if (this.authService.login(this.email, this.senha)) {
-        // Login bem-sucedido
-        this.router.navigate([this.returnUrl]);
-      } else {
-        // Falha no login
-        this.erro = 'Email ou senha incorretos!';
-      }
-      this.carregando = false;
-    }, 500); // Simula delay de servidor
+    // Faz login
+    this.authService.login(this.email, this.senha)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          console.log('✅ Login bem-sucedido, redirecionando...');
+          this.router.navigate([this.returnUrl]);
+        },
+        error: (err) => {
+          console.error('❌ Erro no login:', err);
+        }
+      });
   }
 
   alternarVisibilidadeSenha(): void {
@@ -64,5 +73,10 @@ export class LoginComponent implements OnInit {
     if (event.key === 'Enter') {
       this.fazerLogin();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

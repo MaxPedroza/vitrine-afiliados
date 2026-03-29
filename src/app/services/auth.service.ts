@@ -1,212 +1,232 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, updateEmail, updatePassword, user } from '@angular/fire/auth';
+import { Firestore, collection, setDoc, doc, getDoc, DocumentData } from '@angular/fire/firestore';
+import { BehaviorSubject, Observable, from, of } from 'rxjs';
+import { switchMap, map, catchError, tap } from 'rxjs/operators';
 
-interface User {
-  id: string;
+interface AdminUser extends DocumentData {
+  uid: string;
   email: string;
-  senha: string; // Armazenada como hash simples
+  displayName?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private currentUserSubject: BehaviorSubject<User | null>;
-  public currentUser$: Observable<User | null>;
+  private auth = inject(Auth);
+  private firestore = inject(Firestore);
+
+  // Observable do usuário autenticado
+  public user$ = user(this.auth);
+
+  // Observable indicando se está carregando
+  public loading$ = new BehaviorSubject<boolean>(false);
+
+  // Observable do erro
+  public error$ = new BehaviorSubject<string>('');
 
   constructor() {
-    // Carrega usuário do localStorage se existir
-    const storedUser = localStorage.getItem('currentUser');
-    this.currentUserSubject = new BehaviorSubject<User | null>(
-      storedUser ? JSON.parse(storedUser) : null
+    console.log('✅ AuthService iniciado com Firebase Authentication');
+  }
+
+  /**
+   * Faz signup/registro de novo admin
+   * Só pode ser feito uma vez - depois usar login
+   */
+  signup(email: string, password: string, displayName: string = 'Admin'): Observable<any> {
+    this.loading$.next(true);
+    this.error$.next('');
+
+    return from(createUserWithEmailAndPassword(this.auth, email, password)).pipe(
+      switchMap(credentials => {
+        // Atualiza nome do usuário no Auth
+        return from(updateProfile(credentials.user, { displayName })).pipe(
+          switchMap(() => {
+            // Salva dados no Firestore
+            const userDocRef = doc(this.firestore, `admins/${credentials.user.uid}`);
+            const userData: AdminUser = {
+              uid: credentials.user.uid,
+              email: credentials.user.email || email,
+              displayName: displayName,
+              createdAt: new Date(),
+              updatedAt: new Date()
+            };
+            return from(setDoc(userDocRef, userData));
+          }),
+          map(() => credentials.user),
+          tap(() => {
+            console.log('✅ Admin criado com sucesso!');
+            this.loading$.next(false);
+          }),
+          catchError(err => {
+            console.error('❌ Erro ao criar admin:', err);
+            this.error$.next(err.message);
+            this.loading$.next(false);
+            throw err;
+          })
+        );
+      })
     );
-    this.currentUser$ = this.currentUserSubject.asObservable();
-  }
-
-  /**
-   * Faz hash simples da senha (para desenvolvimento)
-   * Em produção, usar bcrypt, argon2, etc via backend
-   */
-  private hashSenha(senha: string): string {
-    // Hash simples usando btoa (base64) + transformação
-    return btoa(senha).split('').reverse().join('');
-  }
-
-  /**
-   * Verifica se a senha corresponde ao hash
-   */
-  private verificarSenha(senha: string, hash: string): boolean {
-    return this.hashSenha(senha) === hash;
   }
 
   /**
    * Faz login com email e senha
    */
-  login(email: string, senha: string): boolean {
-    const usuarioAdmin = this.obterUsuarioAdmin();
-    
-    if (email === usuarioAdmin.email && this.verificarSenha(senha, usuarioAdmin.senha)) {
-      const user: User = {
-        id: usuarioAdmin.id,
-        email: usuarioAdmin.email,
-        senha: usuarioAdmin.senha
-      };
-      
-      // Salva no localStorage
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      this.currentUserSubject.next(user);
-      
-      console.log('✅ Login bem-sucedido!');
-      return true;
-    }
-    
-    console.warn('❌ Email ou senha incorretos');
-    return false;
+  login(email: string, password: string): Observable<any> {
+    this.loading$.next(true);
+    this.error$.next('');
+
+    return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
+      tap(credentials => {
+        console.log('✅ Login bem-sucedido!', credentials.user.email);
+        this.loading$.next(false);
+      }),
+      catchError(err => {
+        const errorMsg = this.traduzirErroFirebase(err.code);
+        console.error('❌ Erro no login:', errorMsg);
+        this.error$.next(errorMsg);
+        this.loading$.next(false);
+        throw err;
+      }),
+      map(credentials => credentials.user)
+    );
   }
 
   /**
    * Faz logout
    */
-  logout(): void {
-    localStorage.removeItem('currentUser');
-    this.currentUserSubject.next(null);
-    console.log('✅ Logout realizado');
+  logout(): Observable<void> {
+    this.loading$.next(true);
+    return from(signOut(this.auth)).pipe(
+      tap(() => {
+        console.log('✅ Logout realizado');
+        this.loading$.next(false);
+      }),
+      catchError(err => {
+        console.error('❌ Erro no logout:', err);
+        this.loading$.next(false);
+        throw err;
+      })
+    );
   }
 
   /**
    * Verifica se usuário está autenticado
    */
-  estaAutenticado(): boolean {
-    return this.currentUserSubject.value !== null;
+  isAuthenticated(): Observable<boolean> {
+    return this.user$.pipe(
+      map(user => !!user)
+    );
   }
 
   /**
-   * Retorna usuário atual
+   * Altera senha
    */
-  obterUsuarioAtual(): User | null {
-    return this.currentUserSubject.value;
-  }
-
-  /**
-   * Altera senha do admin
-   */
-  alterarSenha(senhaAtual: string, novaSenha: string): boolean {
-    const usuarioAtual = this.obterUsuarioAtual();
+  alterarSenha(novaSenha: string): Observable<void> {
+    const currentUser = this.auth.currentUser;
     
-    if (!usuarioAtual) {
-      console.warn('❌ Usuário não autenticado');
-      return false;
+    if (!currentUser) {
+      return of().pipe(
+        tap(() => this.error$.next('Usuário não autenticado'))
+      );
     }
 
-    // Verifica se senha atual está correta
-    if (!this.verificarSenha(senhaAtual, usuarioAtual.senha)) {
-      console.warn('❌ Senha atual incorreta');
-      return false;
-    }
+    this.loading$.next(true);
+    return from(updatePassword(currentUser, novaSenha)).pipe(
+      tap(() => {
+        console.log('✅ Senha alterada com sucesso!');
+        this.loading$.next(false);
+      }),
+      catchError(err => {
+        const errorMsg = this.traduzirErroFirebase(err.code);
+        console.error('❌ Erro ao alterar senha:', errorMsg);
+        this.error$.next(errorMsg);
+        this.loading$.next(false);
+        throw err;
+      })
+    );
+  }
 
-    // Atualiza senha
-    const novoHash = this.hashSenha(novaSenha);
-    this.atualizarSenhaNoStorage(novoHash);
+  /**
+   * Altera email
+   */
+  alterarEmail(novoEmail: string): Observable<void> {
+    const currentUser = this.auth.currentUser;
     
-    console.log('✅ Senha alterada com sucesso!');
-    return true;
+    if (!currentUser) {
+      return of().pipe(
+        tap(() => this.error$.next('Usuário não autenticado'))
+      );
+    }
+
+    this.loading$.next(true);
+    return from(updateEmail(currentUser, novoEmail)).pipe(
+      switchMap(() => {
+        // Atualiza também no Firestore
+        const userDocRef = doc(this.firestore, `admins/${currentUser.uid}`);
+        return from(setDoc(userDocRef, { email: novoEmail, updatedAt: new Date() }, { merge: true }));
+      }),
+      tap(() => {
+        console.log('✅ Email alterado com sucesso!');
+        this.loading$.next(false);
+      }),
+      catchError(err => {
+        const errorMsg = this.traduzirErroFirebase(err.code);
+        console.error('❌ Erro ao alterar email:', errorMsg);
+        this.error$.next(errorMsg);
+        this.loading$.next(false);
+        throw err;
+      })
+    );
   }
 
   /**
-   * Altera email do admin
+   * Obtém dados do admin do Firestore
    */
-  alterarEmail(senhaAtual: string, novoEmail: string): boolean {
-    const usuarioAtual = this.obterUsuarioAtual();
-    
-    if (!usuarioAtual) {
-      console.warn('❌ Usuário não autenticado');
-      return false;
-    }
-
-    // Verifica se senha atual está correta
-    if (!this.verificarSenha(senhaAtual, usuarioAtual.senha)) {
-      console.warn('❌ Senha incorreta');
-      return false;
-    }
-
-    // Validar e-mail
-    if (!this.validarEmail(novoEmail)) {
-      console.warn('❌ Email inválido');
-      return false;
-    }
-
-    // Atualiza email
-    usuarioAtual.email = novoEmail;
-    localStorage.setItem('currentUser', JSON.stringify(usuarioAtual));
-    this.currentUserSubject.next(usuarioAtual);
-
-    // Atualiza também no localStorage de configuração do admin
-    const adminConfig = JSON.parse(localStorage.getItem('adminConfig') || '{}');
-    adminConfig.email = novoEmail;
-    localStorage.setItem('adminConfig', JSON.stringify(adminConfig));
-
-    console.log('✅ Email alterado com sucesso!');
-    return true;
+  obterDadosAdmin(uid: string): Observable<AdminUser | null> {
+    const userDocRef = doc(this.firestore, `admins/${uid}`);
+    return from(getDoc(userDocRef)).pipe(
+      map(docSnapshot => docSnapshot.data() as AdminUser | null),
+      catchError(err => {
+        console.error('❌ Erro ao buscar dados do admin:', err);
+        return of(null);
+      })
+    );
   }
 
   /**
-   * Valida formato de email
+   * Obtém token JWT do usuário
    */
-  private validarEmail(email: string): boolean {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
+  obterToken(): Observable<string | null> {
+    return this.user$.pipe(
+      switchMap(user => {
+        if (!user) {
+          return of(null);
+        }
+        return from(user.getIdToken());
+      })
+    );
   }
 
   /**
-   * Atualiza a senha no localStorage
+   * Traduz erros do Firebase para português
    */
-  private atualizarSenhaNoStorage(novoHash: string): void {
-    const usuarioAtual = this.obterUsuarioAtual();
-    if (usuarioAtual) {
-      usuarioAtual.senha = novoHash;
-      localStorage.setItem('currentUser', JSON.stringify(usuarioAtual));
-      this.currentUserSubject.next(usuarioAtual);
-    }
-
-    // Atualiza também no localStorage de configuração do admin
-    const adminConfig = JSON.parse(localStorage.getItem('adminConfig') || '{}');
-    adminConfig.senhaHash = novoHash;
-    localStorage.setItem('adminConfig', JSON.stringify(adminConfig));
-  }
-
-  /**
-   * Retorna dados do admin (lê ou cria padrão)
-   */
-  private obterUsuarioAdmin(): User {
-    let adminConfig = JSON.parse(localStorage.getItem('adminConfig') || '{}');
-
-    // Se não existe admin configurado, cria padrão
-    if (!adminConfig.id) {
-      adminConfig = {
-        id: '1',
-        email: 'admin@loja.com',
-        senhaHash: this.hashSenha('123456') // Senha padrão: 123456
-      };
-      localStorage.setItem('adminConfig', JSON.stringify(adminConfig));
-    }
-
-    return {
-      id: adminConfig.id,
-      email: adminConfig.email,
-      senha: adminConfig.senhaHash
+  private traduzirErroFirebase(code: string): string {
+    const erros: { [key: string]: string } = {
+      'auth/weak-password': 'Senha muito fraca. Use pelo menos 6 caracteres.',
+      'auth/email-already-in-use': 'Este email já está registrado.',
+      'auth/invalid-email': 'Email inválido.',
+      'auth/user-not-found': 'Usuário não encontrado.',
+      'auth/wrong-password': 'Senha incorreta.',
+      'auth/user-disabled': 'Esta conta foi desativada.',
+      'auth/too-many-requests': 'Muitas tentativas. Tente novamente mais tarde.',
+      'auth/network-request-failed': 'Erro de rede. Verifique sua conexão.',
+      'auth/requires-recent-login': 'Reautentica-se para realizar esta ação.'
     };
-  }
 
-  /**
-   * Reinicia admin com valores padrão
-   */
-  resetarAdmin(): void {
-    const adminPadrao = {
-      id: '1',
-      email: 'admin@loja.com',
-      senhaHash: this.hashSenha('123456')
-    };
-    localStorage.setItem('adminConfig', JSON.stringify(adminPadrao));
-    console.log('✅ Admin resetado para padrão');
+    return erros[code] || 'Erro ao autenticar. Tente novamente.';
   }
 }

@@ -131,13 +131,12 @@ export class App {
     private authService: AuthService,
     private router: Router
   ) {
-    this.isAutenticado$ = this.authService.currentUser$.pipe(
-      map(user => user !== null)
-    );
+    this.isAutenticado$ = this.authService.isAuthenticated();
   }
 
   fazerLogout(): void {
-    this.authService.logout();
-    this.router.navigate(['/']);
+    this.authService.logout().subscribe(() => {
+      this.router.navigate(['/']);
+    });
   }
 }
