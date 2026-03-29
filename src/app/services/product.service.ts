@@ -35,29 +35,34 @@ export class ProductService {
   // Adiciona novo produto com ID manual baseado em Timestamp para facilitar a gestão
   adicionarProduto(produto: Omit<Produto, 'id'>) {
     const id = Date.now().toString();
-    // Salva no nó específico com o ID gerado
-    return this.db.object(`${this.basePath}/${id}`).set({ ...produto, id });
+    const path = `${this.basePath}/${id}`;
+    return this.db.database.ref(path).set({ ...produto, id });
   }
 
   // Atualiza um produto existente
   atualizarProduto(id: string, produto: Partial<Produto>) {
-    return this.db.object(`${this.basePath}/${id}`).update(produto);
+    const dadosParaAtualizar = { ...produto };
+    delete dadosParaAtualizar.id;
+    const path = `${this.basePath}/${id}`;
+    return this.db.database.ref(path).update(dadosParaAtualizar);
   }
 
   // Remove um produto pelo ID
   removerProduto(id: string) {
-    return this.db.object(`${this.basePath}/${id}`).remove();
+    const path = `${this.basePath}/${id}`;
+    return this.db.database.ref(path).remove();
   }
 
   // Apaga todos os produtos do banco (Botão "Limpar Tudo")
   limparTodosProdutos() {
-    return this.db.object(this.basePath).remove();
+    return this.db.database.ref(this.basePath).remove();
   }
 
   // Incrementa o contador de cliques para o "Foguinho" 🔥
   // Usando transação para garantir que o incremento seja atômico e preciso no servidor
   registrarClique(id: string) {
-    return this.db.object(`${this.basePath}/${id}/cliques`).query.ref.transaction(currentValue => {
+    const path = `${this.basePath}/${id}/cliques`;
+    return this.db.database.ref(path).transaction(currentValue => {
       return (currentValue || 0) + 1;
     });
   }
@@ -69,12 +74,14 @@ export class ProductService {
 
   adicionarLoja(nome: string) {
     const id = Date.now().toString();
-    return this.db.object(`${this.baseLojas}/${id}`).set({ id, nome });
+    const path = `${this.baseLojas}/${id}`;
+    return this.db.database.ref(path).set({ id, nome });
   }
 
   // Remove uma loja pelo ID
   removerLoja(id: string) {
-    return this.db.object(`${this.baseLojas}/${id}`).remove();
+    const path = `${this.baseLojas}/${id}`;
+    return this.db.database.ref(path).remove();
   }
 
   // ATUALIZAÇÃO EM MASSA (O motor do Drag and Drop)
@@ -86,7 +93,7 @@ export class ProductService {
         updates[`${this.basePath}/${p.id}/posicao`] = index;
       }
     });
-    // O update na raiz do banco é o jeito mais rápido e evita múltiplos requests
+    
     return this.db.database.ref().update(updates);
   }
 }

@@ -33,22 +33,25 @@ import { Component, signal } from '@angular/core';
 
     .tabs-wrapper {
       display: flex;
-      justify-content: center;
+      justify-content: center; 
       align-items: center;
       height: 65px;
-      gap: 10px;
+      width: 100%;
+      gap: 8px;
     }
 
     .tabs-wrapper a {
-      display: flex;
-      flex-direction: column;
+      flex: 1;
+      max-width: 90px;
+      display: flex; flex-direction: column;
       align-items: center;
       justify-content: center;
       text-decoration: none;
-      color: #8e8e8e;
-      padding: 5px 10px;
+      color: #888;
+      padding: 8px 12px;
+      border-radius: 8px;
       gap: 4px;
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
     }
 
     .tabs-wrapper a .material-icons {
@@ -95,7 +98,7 @@ import { Component, signal } from '@angular/core';
         gap: 40px;
       }
       .tabs-wrapper a { 
-        flex: none; 
+        flex: none; max-width: none;
         flex-direction: row; 
         gap: 8px; 
         padding: 12px 24px;
@@ -105,8 +108,10 @@ import { Component, signal } from '@angular/core';
       .tabs-wrapper a.active {
         background-color: #967BB6;
         color: #ffffff !important;
+        border: 1px solid #967BB6;
+        border-bottom: 2px solid #967BB6;
         margin-bottom: -2px;
-        box-shadow: 0 -4px 12px rgba(150, 123, 182, 0.2);
+        box-shadow: 0 -4px 12px rgba(150, 123, 182, 0.15);
       }
       .tabs-wrapper a.active .material-icons { color: #ffffff; }
       .tabs-wrapper a span:not(.material-icons) { font-size: 14px; text-transform: none; }

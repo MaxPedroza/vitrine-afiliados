@@ -22,6 +22,10 @@
         <span class="material-icons">{{ editandoId ? 'save' : 'add_circle' }}</span>
         {{ editandoId ? 'Salvar Alterações' : 'Cadastrar Produto' }}
       </button>
+      <button type="button" class="btn-cancel" (click)="cancelarEdicao()" *ngIf="editandoId">
+        <span class="material-icons">close</span>
+        Cancelar
+      </button>
     </div>
   </form>
 

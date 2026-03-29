@@ -58,38 +58,57 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   // Função para salvar o produto no Firebase
   adicionar(): void {
-    const nomeValido = this.novoProduto.nome && this.novoProduto.nome.trim();
-    const linkValido = this.novoProduto.link_compra && this.novoProduto.link_compra.trim();
+    console.log('Tentando salvar...', { editando: this.editandoId, dados: this.novoProduto });
 
-    if (!nomeValido || !linkValido) {
-      this.notify.show('O nome e o link de afiliado são obrigatórios!', 'error');
+    const nome = this.novoProduto.nome?.trim();
+    const link = this.novoProduto.link_compra?.trim();
+
+    if (!nome || !link) {
+      console.warn('Validação falhou: Nome ou Link vazios');
+      this.notify.show('O nome e o link são obrigatórios!', 'error');
       return;
     }
 
-    // Prepara os dados de forma explícita para evitar problemas com campos vazios
-    const dadosParaSalvar: any = {
-      nome: this.novoProduto.nome,
-      link_compra: this.novoProduto.link_compra,
-      link_imagem: this.novoProduto.link_imagem || '',
-      loja: this.novoProduto.loja || '',
-      cliques: this.novoProduto.cliques || 0,
-      posicao: this.novoProduto.posicao || 0,
-      data_expiracao: this.novoProduto.data_expiracao || '',
-      ativo: this.novoProduto.ativo !== undefined ? this.novoProduto.ativo : true
-    };
-
     if (this.editandoId) {
-      // Lógica de Edição
-      this.productService.atualizarProduto(this.editandoId, dadosParaSalvar)
+      // LÓGICA DE EDIÇÃO (SALVAR ALTERAÇÕES)
+      console.log('Iniciando atualização para ID:', this.editandoId);
+
+      const dadosParaAtualizar: Partial<Produto> = {
+        nome: nome,
+        link_compra: link,
+        link_imagem: this.novoProduto.link_imagem || '',
+        loja: this.novoProduto.loja || '',
+        data_expiracao: this.novoProduto.data_expiracao || '',
+        ativo: this.novoProduto.ativo ?? true
+      };
+
+      console.log('Dados a atualizar:', dadosParaAtualizar);
+
+      this.productService.atualizarProduto(this.editandoId, dadosParaAtualizar)
         .then(() => {
-          this.notify.show('Produto atualizado! ✨');
+          console.log('✅ Produto atualizado com sucesso');
+          this.notify.show('Produto atualizado com sucesso! ✨');
           this.cancelarEdicao();
         })
-        .catch(err => this.notify.show(err.message, 'error'));
+        .catch(err => {
+          console.error('❌ Erro ao atualizar:', err);
+          this.notify.show('Erro ao atualizar: ' + err.message, 'error');
+        });
+
     } else {
-      // Lógica de Adição
-      this.novoProduto.posicao = this.produtos.length;
-      this.productService.adicionarProduto(dadosParaSalvar as Omit<Produto, 'id'>)
+      // LÓGICA DE NOVO PRODUTO 
+      const novoProdutoData = {
+        nome: nome,
+        link_compra: link,
+        link_imagem: this.novoProduto.link_imagem || '',
+        loja: this.novoProduto.loja || '',
+        data_expiracao: this.novoProduto.data_expiracao || '',
+        posicao: this.produtos.length || 0,
+        cliques: 0,
+        ativo: this.novoProduto.ativo ?? true
+      } as Omit<Produto, 'id'>;
+
+      this.productService.adicionarProduto(novoProdutoData)
         .then(() => {
           this.notify.show('Produto cadastrado! 🚀');
           this.novoProduto = this.getEmptyProduct();
@@ -126,18 +145,35 @@ export class AdminComponent implements OnInit, OnDestroy {
   async remover(id: string | undefined): Promise<void> {
     if (!id) return;
     
+    console.log('Tentando remover produto ID:', id);
+    
     if (await this.notify.confirm('Deseja excluir este produto permanentemente?')) {
       this.productService.removerProduto(id)
-        .then(() => this.notify.show('Produto removido'))
-        .catch(err => this.notify.show(err.message, 'error'));
+        .then(() => {
+          console.log('✅ Produto removido com sucesso');
+          this.notify.show('Produto removido com sucesso! 🗑️');
+        })
+        .catch(err => {
+          console.error('❌ Erro ao remover:', err);
+          this.notify.show('Erro ao remover: ' + err.message, 'error');
+        });
     }
   }
 
   // Limpa toda a lista do banco de dados
   async limparTudo(): Promise<void> {
+    console.log('Tentando limpar todos os produtos');
+    
     if (await this.notify.confirm('⚠️ ATENÇÃO: Isso apagará TODOS os produtos. Confirmar?')) {
       this.productService.limparTodosProdutos()
-        .catch(err => this.notify.show(err.message, 'error'));
+        .then(() => {
+          console.log('✅ Todos os produtos removidos com sucesso');
+          this.notify.show('Todos os produtos foram removidos! 🗑️');
+        })
+        .catch(err => {
+          console.error('❌ Erro ao limpar tudo:', err);
+          this.notify.show('Erro ao limpar: ' + err.message, 'error');
+        });
     }
   }
 
