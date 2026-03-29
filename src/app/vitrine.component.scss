@@ -4,6 +4,62 @@
   margin: 0 auto;
 }
 
+.header-vitrine {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  gap: 20px;
+
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .material-icons {
+      font-size: 28px;
+      color: #9c27b0;
+    }
+  }
+
+  .title-purple {
+    color: #9c27b0;
+    font-weight: bold;
+    font-size: 24px;
+    margin: 0;
+  }
+
+  .btn-admin-login {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(156, 39, 176, 0.2);
+    white-space: nowrap;
+
+    .material-icons {
+      font-size: 18px;
+      color: white;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(156, 39, 176, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
 .header-with-icon {
   display: flex;
   justify-content: center;

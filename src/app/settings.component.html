@@ -1,0 +1,212 @@
+<div class="settings-container">
+  <div class="header-settings">
+    <div class="header-title">
+      <span class="material-icons">settings</span>
+      <h1 class="title-purple">Configurações</h1>
+    </div>
+  </div>
+
+  <!-- Abas -->
+  <div class="tabs-settings">
+    <button 
+      class="tab-btn" 
+      [class.active]="abaSelecionada === 'senha'"
+      (click)="selecionarAba('senha')"
+    >
+      <span class="material-icons">lock</span>
+      <span>Alterar Senha</span>
+    </button>
+    
+    <button 
+      class="tab-btn" 
+      [class.active]="abaSelecionada === 'email'"
+      (click)="selecionarAba('email')"
+    >
+      <span class="material-icons">email</span>
+      <span>Alterar Email</span>
+    </button>
+  </div>
+
+  <!-- TAB: ALTERAR SENHA -->
+  <div class="tab-content" *ngIf="abaSelecionada === 'senha'">
+    <div class="settings-box">
+      <h2>Alterar Senha</h2>
+      <p class="subtitle">Escolha uma nova senha segura</p>
+
+      <form (ngSubmit)="alterarSenha()" class="settings-form">
+        <!-- Senha Atual -->
+        <div class="form-group">
+          <label for="senhaAtualSenha">Senha Atual</label>
+          <div class="password-wrapper">
+            <input 
+              [type]="senhaAtualVisivel ? 'text' : 'password'"
+              id="senhaAtualSenha"
+              name="senhaAtualSenha"
+              [(ngModel)]="senhaAtualSenha"
+              placeholder="Digite sua senha atual"
+              [disabled]="carregandoSenha"
+              (keyup)="erroSenha = ''"
+            />
+            <button 
+              type="button" 
+              class="btn-toggle"
+              (click)="alternarVisibilidadeSenhaAtual()"
+              [disabled]="carregandoSenha"
+            >
+              <span class="material-icons">
+                {{ senhaAtualVisivel ? 'visibility_off' : 'visibility' }}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Nova Senha -->
+        <div class="form-group">
+          <label for="novaSenha">Nova Senha</label>
+          <div class="password-wrapper">
+            <input 
+              [type]="novaSenhaVisivel ? 'text' : 'password'"
+              id="novaSenha"
+              name="novaSenha"
+              [(ngModel)]="novaSenha"
+              placeholder="Digite uma nova senha"
+              [disabled]="carregandoSenha"
+              (keyup)="erroSenha = ''"
+            />
+            <button 
+              type="button" 
+              class="btn-toggle"
+              (click)="alternarVisibilidadeNovaSenha()"
+              [disabled]="carregandoSenha"
+            >
+              <span class="material-icons">
+                {{ novaSenhaVisivel ? 'visibility_off' : 'visibility' }}
+              </span>
+            </button>
+          </div>
+          <small class="info-text">Mínimo 6 caracteres</small>
+        </div>
+
+        <!-- Confirmar Senha -->
+        <div class="form-group">
+          <label for="confirmarSenha">Confirmar Nova Senha</label>
+          <div class="password-wrapper">
+            <input 
+              [type]="confSenhaVisivel ? 'text' : 'password'"
+              id="confirmarSenha"
+              name="confirmarSenha"
+              [(ngModel)]="confirmarSenha"
+              placeholder="Repita a nova senha"
+              [disabled]="carregandoSenha"
+              (keyup)="erroSenha = ''"
+            />
+            <button 
+              type="button" 
+              class="btn-toggle"
+              (click)="alternarVisibilidadeConfSenha()"
+              [disabled]="carregandoSenha"
+            >
+              <span class="material-icons">
+                {{ confSenhaVisivel ? 'visibility_off' : 'visibility' }}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Erro -->
+        <div class="erro" *ngIf="erroSenha">
+          <span class="material-icons">error</span>
+          <span>{{ erroSenha }}</span>
+        </div>
+
+        <!-- Sucesso -->
+        <div class="sucesso" *ngIf="sucessoSenha">
+          <span class="material-icons">check_circle</span>
+          <span>{{ sucessoSenha }}</span>
+        </div>
+
+        <!-- Botão Submit -->
+        <button 
+          type="submit" 
+          class="btn-salvar"
+          [disabled]="carregandoSenha"
+        >
+          <span class="material-icons" *ngIf="carregandoSenha">sync</span>
+          <span>{{ carregandoSenha ? 'Atualizando...' : 'Salvar Nova Senha' }}</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- TAB: ALTERAR EMAIL -->
+  <div class="tab-content" *ngIf="abaSelecionada === 'email'">
+    <div class="settings-box">
+      <h2>Alterar Email</h2>
+      <p class="subtitle">Email atual: <strong>{{ emailAtual }}</strong></p>
+
+      <form (ngSubmit)="alterarEmail()" class="settings-form">
+        <!-- Novo Email -->
+        <div class="form-group">
+          <label for="novoEmail">Novo Email</label>
+          <input 
+            type="email"
+            id="novoEmail"
+            name="novoEmail"
+            [(ngModel)]="novoEmail"
+            placeholder="seu@email.com"
+            [disabled]="carregandoEmail"
+            (keyup)="erroEmail = ''"
+          />
+        </div>
+
+        <!-- Senha para Confirmar -->
+        <div class="form-group">
+          <label for="senhaAtualEmail">Sua Senha (para confirmar)</label>
+          <div class="password-wrapper">
+            <input 
+              [type]="emailVisivel ? 'text' : 'password'"
+              id="senhaAtualEmail"
+              name="senhaAtualEmail"
+              [(ngModel)]="senhaAtualEmail"
+              placeholder="Digite sua senha"
+              [disabled]="carregandoEmail"
+              (keyup)="erroEmail = ''"
+            />
+            <button 
+              type="button" 
+              class="btn-toggle"
+              (click)="alternarVisibilidadeEmail()"
+              [disabled]="carregandoEmail"
+            >
+              <span class="material-icons">
+                {{ emailVisivel ? 'visibility_off' : 'visibility' }}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Erro -->
+        <div class="erro" *ngIf="erroEmail">
+          <span class="material-icons">error</span>
+          <span>{{ erroEmail }}</span>
+        </div>
+
+        <!-- Sucesso -->
+        <div class="sucesso" *ngIf="sucessoEmail">
+          <span class="material-icons">check_circle</span>
+          <span>{{ sucessoEmail }}</span>
+        </div>
+
+        <!-- Botão Submit -->
+        <button 
+          type="submit" 
+          class="btn-salvar"
+          [disabled]="carregandoEmail"
+        >
+          <span class="material-icons" *ngIf="carregandoEmail">sync</span>
+          <span>{{ carregandoEmail ? 'Atualizando...' : 'Salvar Novo Email' }}</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

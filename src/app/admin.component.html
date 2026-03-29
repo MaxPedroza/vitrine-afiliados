@@ -1,9 +1,18 @@
 <div class="admin-container">
   <div class="header-admin">
-    <h1 class="title-purple">{{ editandoId ? 'Editar Produto' : 'Novo Produto' }}</h1>
-    <button class="btn-clear-all" (click)="limparTudo()" *ngIf="produtos.length > 0">
-      <span class="material-icons">delete_sweep</span> Limpar Tudo
-    </button>
+    <div class="header-title">
+      <span class="material-icons">inventory_2</span>
+      <h1 class="title-purple">{{ editandoId ? 'Editar Produto' : 'Novo Produto' }}</h1>
+    </div>
+    <div class="header-right">
+      <div class="editing-indicator" *ngIf="editandoId">
+        <span class="material-icons">edit</span>
+        <span>Em modo edição</span>
+      </div>
+      <button class="btn-clear-all" (click)="limparTudo()" *ngIf="produtos.length > 0">
+        <span class="material-icons">delete_sweep</span> Limpar Tudo
+      </button>
+    </div>
   </div>
   
   <form (ngSubmit)="adicionar()" class="cadastro-form">
@@ -34,14 +43,15 @@
   </div>
 
   <div cdkDropList (cdkDropListDropped)="drop($event)" class="drag-list">
-    <div *ngFor="let item of produtos" cdkDrag class="drag-item product-card-admin" [ngClass]="[(item.loja || '').toLowerCase(), getValidadeClass(item.data_expiracao)]">
+    <div *ngFor="let item of produtos" cdkDrag class="drag-item product-card-admin" [ngClass]="[(item.loja || '').toLowerCase(), getValidadeClass(item.data_expiracao)]" [class.editando]="editandoId === item.id">
       
       <div class="drag-handle" cdkDragHandle title="Arraste para reordenar">
         <span class="material-icons">drag_indicator</span>
       </div>
       
       <div class="prod-thumb">
-        <img [src]="item.link_imagem || 'assets/placeholder.png'" alt="thumb">
+        <img *ngIf="item.link_imagem" [src]="item.link_imagem" alt="thumb">
+        <span *ngIf="!item.link_imagem" class="material-icons placeholder-icon">image</span>
       </div>
 
       <div class="prod-details product-info">

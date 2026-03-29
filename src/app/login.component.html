@@ -1,0 +1,70 @@
+<div class="login-container">
+  <div class="login-box">
+    <div class="login-header">
+      <span class="material-icons">lock</span>
+      <h1>Acesso à Loja</h1>
+    </div>
+
+    <form (ngSubmit)="fazerLogin()" class="login-form">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email"
+          [(ngModel)]="email"
+          placeholder="seu@email.com"
+          [disabled]="carregando"
+          (keyup)="erro = ''"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="senha">Senha</label>
+        <div class="password-wrapper">
+          <input 
+            [type]="senhaVisivel ? 'text' : 'password'"
+            id="senha"
+            name="senha"
+            [(ngModel)]="senha"
+            placeholder="Digite sua senha"
+            [disabled]="carregando"
+            (keyup.enter)="fazerLogin()"
+            (keyup)="erro = ''"
+          />
+          <button 
+            type="button" 
+            class="btn-toggle-senha"
+            (click)="alternarVisibilidadeSenha()"
+            [disabled]="carregando"
+            title="Mostrar/Ocultar senha"
+          >
+            <span class="material-icons">
+              {{ senhaVisivel ? 'visibility_off' : 'visibility' }}
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <div class="erro" *ngIf="erro">
+        <span class="material-icons">error</span>
+        <span>{{ erro }}</span>
+      </div>
+
+      <button 
+        type="submit" 
+        class="btn-login"
+        [disabled]="carregando"
+      >
+        <span class="material-icons" *ngIf="carregando">sync</span>
+        <span *ngIf="!carregando">{{ !carregando ? 'Acessar' : 'Carregando...' }}</span>
+      </button>
+    </form>
+
+    <div class="login-info">
+      <p><strong>Credenciais padrão:</strong></p>
+      <p>Email: <code>admin@loja.com</code></p>
+      <p>Senha: <code>123456</code></p>
+    </div>
+  </div>
+</div>

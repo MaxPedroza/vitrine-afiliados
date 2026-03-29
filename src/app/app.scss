@@ -33,7 +33,7 @@ button {
 
 .main-nav {
   background-color: #dcd6f7; // Tom de lavanda bem clarinho para a base do menu
-  padding-top: 15px;
+  padding-top: 0;
   display: flex;
   justify-content: center;
   border-bottom: 2px solid #967BB6; // Linha de conexão na cor Lavanda
@@ -56,7 +56,7 @@ button {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 24px;
+    padding: 8px 24px;
     font-size: 14px;
     border-radius: 12px 12px 0 0; // Formato de aba/pasta
     transition: all 0.3s ease;
@@ -89,15 +89,39 @@ button {
       color: #967BB6;
     }
   }
+
+  .btn-logout {
+    background: #ff5252;
+    color: white;
+    border: none;
+    padding: 8px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 12px 12px 0 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+
+    .material-icons {
+      font-size: 20px;
+    }
+
+    &:hover {
+      background: #ff1744;
+      transform: scale(1.05);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
 }
 
 .page-content {
-  margin-top: 0; // Garante que o conteúdo encoste nas abas
-}
-
-.page-content {
-  // Isso garante que o conteúdo suba e encoste no menu de abas
   margin-top: 0;
+  padding-top: 0;
 }
 
 // Estilos globais para cards (Dashboard e Admin)

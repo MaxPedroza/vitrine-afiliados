@@ -4,12 +4,17 @@ import { VitrineComponent } from './vitrine.component';
 import { AdminComponent } from './admin.component';
 import { AnalyticsComponent } from './analytics.component';
 import { LojaComponent } from './loja.component';
+import { LoginComponent } from './login.component';
+import { SettingsComponent } from './settings.component';
+import { AuthGuard } from './services/auth.guard';
 
 const routes: Routes = [
   { path: '', component: VitrineComponent },
-  { path: 'admin', component: AdminComponent },
-  { path: 'lojas', component: LojaComponent },
-  { path: 'analytics', component: AnalyticsComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
+  { path: 'lojas', component: LojaComponent, canActivate: [AuthGuard] },
+  { path: 'analytics', component: AnalyticsComponent, canActivate: [AuthGuard] },
+  { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '' }
 ];
 

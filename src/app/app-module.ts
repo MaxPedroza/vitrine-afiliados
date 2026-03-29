@@ -16,6 +16,8 @@ import { AdminComponent } from './admin.component';
 import { VitrineComponent } from './vitrine.component';
 import { AnalyticsComponent } from './analytics.component';
 import { LojaComponent } from './loja.component';
+import { LoginComponent } from './login.component';
+import { SettingsComponent } from './settings.component';
 
 // Novo componente de Popups
 import { NotificationComponent } from './notification.component';
@@ -27,6 +29,8 @@ import { NotificationComponent } from './notification.component';
     VitrineComponent,
     AnalyticsComponent,
     LojaComponent,
+    LoginComponent,
+    SettingsComponent,
     NotificationComponent // <--- Adicionado aqui
   ],
   imports: [

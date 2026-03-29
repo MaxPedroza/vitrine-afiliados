@@ -7,9 +7,22 @@
 
 .header-analytics {
   margin-bottom: 30px;
+  
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    
+    .material-icons {
+      font-size: 28px;
+      color: var(--roxo-vibrante, #9c27b0);
+    }
+  }
+  
   .title-purple {
     color: var(--roxo-vibrante, #9c27b0);
     font-weight: bold;
+    font-size: 24px;
     margin: 0;
   }
   .subtitle {

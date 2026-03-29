@@ -1,4 +1,4 @@
-<nav class="main-nav">
+<nav class="main-nav" *ngIf="isAutenticado$ | async">
   <div class="tabs-wrapper">
     <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
       <span class="material-icons">storefront</span>
@@ -19,6 +19,16 @@
       <span class="material-icons">insights</span>
       <span>Relatórios</span>
     </a>
+
+    <a routerLink="/settings" routerLinkActive="active" title="Configurações">
+      <span class="material-icons">settings</span>
+      <span>Configurações</span>
+    </a>
+
+    <button class="btn-logout" (click)="fazerLogout()" title="Sair da conta">
+      <span class="material-icons">logout</span>
+      <span>Sair</span>
+    </button>
   </div>
 </nav>
 
