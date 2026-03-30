@@ -1,0 +1,33 @@
+# Arquivos compilados
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Dependências
+/node_modules
+
+# Logs
+npm-debug.log
+yarn-error.log
+firebase-debug.log
+ui-debug.log
+
+# IDEs e Editores
+.idea/
+.project
+.classpath
+.cproject
+.settings/
+.vscode/
+*.swp
+*.bak
+*.tmp
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Firebase
+.firebase/
+firebase-debug.log
