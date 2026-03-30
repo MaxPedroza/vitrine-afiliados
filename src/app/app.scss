@@ -132,25 +132,34 @@ button {
 
 // Media queries para mobile
 @media (max-width: 768px) {
+  .main-nav {
+    justify-content: flex-start;
+  }
+
   .main-nav .tabs-wrapper {
     gap: 4px;
     padding: 4px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    overflow-x: visible;
   }
 
   .main-nav a {
-    padding: 6px 12px;
-    font-size: 12px;
+    padding: 6px 8px;
+    font-size: 11px;
+    flex-shrink: 0;
   }
 
   .main-nav .btn-logout {
-    padding: 6px 12px;
-    font-size: 12px;
+    padding: 6px 8px;
+    font-size: 11px;
   }
 }
 
 .page-content {
   margin-top: 0;
   padding-top: 0;
+  margin-bottom: 0;
 }
 
 // Estilos globais para cards (Dashboard e Admin)
