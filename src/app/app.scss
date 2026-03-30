@@ -13,13 +13,20 @@
   --fundo-app: #E6E0F8;      // App Background (alias for base-lilas)
 }
 
-body {
-  margin: 0;
-  padding: 0;
+html, body {
+  margin: 0 !important ;
+  padding: 0 !important;
+  height: 100%;
   font-family: 'Roboto', sans-serif;
   background-color: var(--base-lilas);
   color: var(--texto-principal);
   -webkit-font-smoothing: antialiased;
+}
+
+:host {
+  display: block;
+  margin: 0;
+  padding: 0;
 }
 
 * { 
